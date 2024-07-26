@@ -3,6 +3,7 @@
         node_modules/
         package-lock.json
 node_modules
+pages.zip
 
 # Ignore .eslintrc.json file
 .eslintrc.json
