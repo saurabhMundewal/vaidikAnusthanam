@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import Slider from 'react-slick';
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import MainSlider from '../../atoms/mainSlider'
+import MainSlider from "../../atoms/mainSlider";
 import PoojaCard from "@/atoms/pujaCard";
 import Link from "next/link";
 import HelpCenter from "@/atoms/helpCenter";
@@ -11,9 +11,15 @@ import BlogCard from "./blogCard";
 
 export default function HomePage(props) {
   const [isOpen, setIsOpen] = useState(1);
-  const { getHomePageDetails, generalConfiguration, faqData, poojaData, homeContent } = props
+  const {
+    getHomePageDetails,
+    generalConfiguration,
+    faqData,
+    poojaData,
+    homeContent,
+  } = props;
 
-console.log(props, 'props')
+  console.log(props, "props");
   const handleClickFaq = (val) => {
     setIsOpen(val);
   };
@@ -50,14 +56,22 @@ console.log(props, 'props')
                   <span />
                   <span />
                 </div>
-                <img src={getHomePageDetails?.home_about?.file2} alt={getHomePageDetails?.home_about?.title2} />
-                <img src={getHomePageDetails?.home_about?.file3} alt={getHomePageDetails?.home_about?.title3} />
+                <img
+                  src={getHomePageDetails?.home_about?.file2}
+                  alt={getHomePageDetails?.home_about?.title2}
+                />
+                <img
+                  src={getHomePageDetails?.home_about?.file3}
+                  alt={getHomePageDetails?.home_about?.title3}
+                />
               </div>
             </div>
             <div className="col-lg-6">
               <div className="me-lg-30">
                 <div className="section-title mb-0 text-start">
-                  <p className="subtitle">{getHomePageDetails?.home_about?.title1}</p>
+                  <p className="subtitle">
+                    {getHomePageDetails?.home_about?.title1}
+                  </p>
                   <h4 className="title">
                     {getHomePageDetails?.home_about?.title2}
                   </h4>
@@ -85,32 +99,48 @@ console.log(props, 'props')
           <div className="section-title text-start">
             <h4 className="title text-white">How We Can Help</h4>
           </div>
-          <div className="row">
-            {/* {props?.categories ? props?.categories?.slice(0, 3)?.map((categoryData) => { */}
-            {homeContent ? homeContent?.content?.home_setting_how_we_can_help?.map((categoryData) => {
-              return (<div className="col-lg-4 col-md-6" key={categoryData?.data_id}>
-                <Link
-                  href='#'
-                  className="sigma_service style-1 primary-bg"
-                >
-                  <div className="sigma_service-thumb">
-                    <i className="text-white flaticon-temple" />
-                  </div>
-                  <div className="sigma_service-body">
-                    <h3 className="text-white">{categoryData?.how_we_can_title}</h3>
-                    <p className="text-white">
-                      {categoryData?.how_we_can_content}
-                    </p>
-                  </div>
-                  <span className="btn-link text-white">
-                    Learn More <i className="text-white far fa-arrow-right" />{" "}
-                  </span>
-                </Link>
-              </div>)
-            }) : null}
+          <div className="row g-3">
+            {homeContent
+              ? homeContent?.content?.home_setting_how_we_can_help?.map(
+                  (categoryData, data) => {
+                    return (
+                      <div
+                        className="col-lg-4 col-md-6"
+                        key={categoryData?.data_id}
+                      >
+                        <Link
+                          href="#"
+                          className="sigma_service style-1 primary-bg"
+                        >
+                          <div className="sigma_service-thumb">
+                            {/* Dynamic image from the backend */}
+                            <img
+                              src={categoryData?.how_we_can_images}
+                              alt="img"
+                            />
+                          </div>
+                          <div className="sigma_service-body">
+                            <h3 className="text-white">
+                              {categoryData?.how_we_can_title}
+                            </h3>
+                            <p className="text-white">
+                              {categoryData?.how_we_can_content}
+                            </p>
+                          </div>
+                          <span className="btn-link text-white">
+                            Learn More{" "}
+                            <i className="text-white far fa-arrow-right" />{" "}
+                          </span>
+                        </Link>
+                      </div>
+                    );
+                  }
+                )
+              : null}
           </div>
         </div>
       </div>
+
       {/* puja Start */}
       <div className="section section-padding pt-0" style={{ marginTop: 20 }}>
         <div className="container">
@@ -119,8 +149,8 @@ console.log(props, 'props')
             <p className="subtitle">
               भाव के लिए भव्यता की आवश्यकता नही होती, किन्तु अगर भव्यता से वो
               भाव उत्पन्न हो जो सौम्यता के साथ, समस्त परिवार में समृद्धि लाये,
-              तो इस भौतिक आयाम में उस से सर्वोपरि कुछ नहीं। वैदिक रस में
-              सराबोर हमारे अनुष्ठान, आपको सदैव आपके आध्यात्मिक उत्थान के लिए
+              तो इस भौतिक आयाम में उस से सर्वोपरि कुछ नहीं। वैदिक रस में सराबोर
+              हमारे अनुष्ठान, आपको सदैव आपके आध्यात्मिक उत्थान के लिए
               प्रोत्साहित करते हैं।
             </p>
             <li>
@@ -136,11 +166,10 @@ console.log(props, 'props')
               </a> */}
           </div>
           <div className="row g-3">
-            {poojaData?.puja_data && poojaData?.puja_data?.map((pooja) => {
-              return (<PoojaCard pooja={pooja} />)
-            })}
-
-
+            {poojaData?.puja_data &&
+              poojaData?.puja_data?.map((pooja) => {
+                return <PoojaCard pooja={pooja} />;
+              })}
           </div>
         </div>
       </div>
@@ -157,30 +186,41 @@ console.log(props, 'props')
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
               vitae odio sem. Vivamus tristique vitae eros congue tempus.
               Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae
-              ipsum eu, euismod laoreet enim.{" "}
+              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae ipsum
+              eu, euismod laoreet enim.{" "}
             </p>
             {/* <a href="" className="sigma_btn-custom-1">
         View Detailed Panchang
       </a> */}
           </div>
+
           <div className="row g-3">
-            {props?.categories ? props?.categories?.map((categoryData, ind) => {
-              return (<div className="col-lg-6 col-md-6" key={categoryData?.data_id}>
-                <Link href={'categoryData?.features_page_link'} className="sigma_service style-1">
-                  <div className="sigma_service-thumb">
-                    <img src={categoryData?.features_images} />
-                  </div>
-                  <div className="sigma_service-body">
-                    <h5> {categoryData?.title}</h5>
-                    <p>
-                      {categoryData?.meta_description}
-                    </p>
-                  </div>
-                </Link>
-              </div>)
-            }) : null
-            }
+            {homeContent
+              ? homeContent?.content?.home_setting_features?.map(
+                  (categoryData, data) => {
+                    console.log("Category Data:", categoryData);
+                    return (
+                      <div
+                        className="col-lg-6 col-md-6"
+                        key={categoryData?.data_id}
+                      >
+                        <Link
+                          href={"categoryData?.features_page_link"}
+                          className="sigma_service style-1"
+                        >
+                          <div className="sigma_service-thumb">
+                            <img src={categoryData?.features_images} />
+                          </div>
+                          <div className="sigma_service-body">
+                            <h5> {categoryData?.features_title}</h5>
+                            <p>{categoryData?.features_content}</p>
+                          </div>
+                        </Link>
+                      </div>
+                    );
+                  }
+                )
+              : null}
           </div>
         </div>
       </div>
@@ -208,28 +248,37 @@ console.log(props, 'props')
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
               vitae odio sem. Vivamus tristique vitae eros congue tempus.
               Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae
-              ipsum eu, euismod laoreet enim.{" "}
+              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae ipsum
+              eu, euismod laoreet enim.{" "}
             </p>
           </div>
-          <div className="row">
-            {homeContent && homeContent?.content?.home_setting_how_we_can_help?.map((data, index) => {
-              return (<div className="col-lg-3 col-md-6" key={index}>
-                <a href="holi-details.html" className="sigma_service style-2">
-                  <div className="sigma_service-thumb">
-                    <img src={data?.how_we_can_images} alt="img" />
-                  </div>
-                  <div className="sigma_service-body">
-                    <h4>{data?.how_we_can_title}</h4>
-                    <p>{data?.how_we_can_content}
-                    </p>
-                  </div>
-                </a>
-              </div>)
-
-            })}
-
-
+          <div className="row g-3">
+            
+            {props?.categories
+              ? props?.categories?.map((categoryData, ind) => {
+                  console.log("Category Data:", categoryData);
+                  const imageUrl = `${categoryData.lib_image_location}${categoryData.lib_image}`;
+                  return (
+                    <div
+                      className="col-lg-3 col-md-6"
+                      key={categoryData?.data_id}
+                    >
+                      <a
+                        href={categoryData?.features_page_link}
+                        className="sigma_service style-1"
+                      >
+                        <div className="sigma_service-thumb">
+                          <img src={imageUrl} alt={categoryData?.title} />
+                        </div>
+                        <div className="sigma_service-body">
+                          <h5>{categoryData?.title}</h5>
+                          <p>{categoryData?.meta_description}</p>
+                        </div>
+                      </a>
+                    </div>
+                  );
+                })
+              : null}
           </div>
         </div>
       </div>
@@ -260,37 +309,40 @@ console.log(props, 'props')
                   </p>
                 </div>
                 <div className="accordion with-gap" id="generalFAQExample">
-                  {faqData?.length ? faqData?.map(item => (
-                    <div className="card" key={item?.id}>
-                      <div
-                        className="card-header"
-                        data-bs-toggle="collapse"
-                        role="button"
-                        data-bs-target="#generalOne"
-                        aria-expanded={
-                          isOpen === item?.id ? "true" : "false"
-                        }
-                        aria-controls="generalOne"
-                        onClick={() => handleClickFaq(item?.id)}
-                      >
-                        {item?.title}
-                      </div>
-                      <div
-                        id="generalOne"
-                        className={`collapse ${isOpen === item?.id ? "show" : ""
-                          }`}
-                        data-bs-parent="#generalFAQExample"
-                      >
-                        <div className="card-body">
+                  {faqData?.length
+                    ? faqData?.map((item) => (
+                        <div className="card" key={item?.id}>
                           <div
-                            dangerouslySetInnerHTML={{
-                              __html: item?.content,
-                            }}
-                          />
+                            className="card-header"
+                            data-bs-toggle="collapse"
+                            role="button"
+                            data-bs-target="#generalOne"
+                            aria-expanded={
+                              isOpen === item?.id ? "true" : "false"
+                            }
+                            aria-controls="generalOne"
+                            onClick={() => handleClickFaq(item?.id)}
+                          >
+                            {item?.title}
+                          </div>
+                          <div
+                            id="generalOne"
+                            className={`collapse ${
+                              isOpen === item?.id ? "show" : ""
+                            }`}
+                            data-bs-parent="#generalFAQExample"
+                          >
+                            <div className="card-body">
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: item?.content,
+                                }}
+                              />
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                  )) : null}
+                      ))
+                    : null}
                 </div>
               </div>
             </div>
@@ -298,10 +350,14 @@ console.log(props, 'props')
         </div>
       </div>
       {/* CTA Start */}
-      <HelpCenter />      
+      <HelpCenter />
       <ContactForm />
-            {/* Form End */}
+      {/* Form End */}
       {/* Testimonials Start */}
+
+
+
+      
       <section className="section pt-0">
         <div
           className="container testimonial-section bg-contain bg-norepeat bg-center"
@@ -317,7 +373,7 @@ console.log(props, 'props')
             <div className="sigma_testimonial-slider">
               <Slider {...test_settings}>
                 {getHomePageDetails?.testimonial?.map((testimonial, ind) => (
-                  <div className="sigma_testimonial-inner" key={ind}>
+                  <div className="sigma_testimonial-inner active" key={ind}>
                     <div className="sigma_service-thumb">
                       <img
                         src={testimonial?.test_image}
@@ -335,11 +391,11 @@ console.log(props, 'props')
                             <i className="far fa-star" />
                           </div>
                         </div>
-                        <div dangerouslySetInnerHTML={{
-                          __html: testimonial?.test_description,
-                        }}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: testimonial?.test_description,
+                          }}
                         />
-
                       </div>
                       <div className="sigma_testimonial-footer">
                         <div className="sigma_testimonial-author">
@@ -350,7 +406,6 @@ console.log(props, 'props')
                     </div>
                   </div>
                 ))}
-
               </Slider>
             </div>
           </div>
@@ -376,11 +431,10 @@ console.log(props, 'props')
           <div className="row">
             {/* Article Start */}
             {props?.blogData?.map((blog) => {
-              return (<BlogCard blog={blog} />)
+              return <BlogCard blog={blog} />;
             })}
 
             {/* Article End */}
-
           </div>
         </div>
       </div>
@@ -389,7 +443,6 @@ console.log(props, 'props')
       <div className="sigma_top style-5">
         <i className="far fa-angle-double-up" />
       </div>
-
     </>
   );
 }
