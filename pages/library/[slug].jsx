@@ -19,7 +19,6 @@ export default function Librarypage() {
       console.error("Error fetching puja data:", error);
     }
   };
-  console.log(libData, 'libData')
 
   useEffect(() => {
     if (slug) {
@@ -55,8 +54,6 @@ export default function Librarypage() {
         <div className="section section-padding">
           <div className="container">
             <div className="img-container">
-              {console.log(libData?.library_list, '.........')}
-
               <img src="https://images.astroyogi.com/astroyogi2017/hindi/images/spiritual/aartiBanner/aarti_home.png" />
             </div>
             <div className="row product-grid">

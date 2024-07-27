@@ -4,6 +4,7 @@ import axiosInstance from '../../lib/axiosInstance';
 import HelpCenter from '../../atoms/helpCenter';
 import Link from 'next/link';
 import PoojaCard from '@/atoms/pujaCard';
+import Head from "next/head";
 
 const PujaPage = () => {
   const router = useRouter();
@@ -29,11 +30,16 @@ const PujaPage = () => {
     }
   }, [slug]);
 
-
     return (
       <div>
       <>
         {/* partial */}
+        <Head>
+          <title>{pujaData?.puja_meta?.puja_metatitle}</title>
+          <meta name="description" content={'pujaData?.puja_meta?.puja_meta_description'} />
+          <meta name="keywords" content={pujaData?.puja_meta?.puja_meta_keywords} />
+          {/* Add more meta tags as needed */}
+        </Head>
         <div
           className="sigma_subheader dark-overlay dark-overlay-2"
           style={{ backgroundImage: "url(./../assets/img/subheader.jpg)" }}

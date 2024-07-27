@@ -32,9 +32,9 @@ const UserHeader = ({ handleLogout }) => {
               <a href="#">Book New Puja</a>{" "} *
             </li> */}
               <li className="menu-item">
-                <Link href="javascript:(void)" onClick={() => handleLogout()}>
+                <a href="javascript:(void)" onClick={() => handleLogout()}>
                   Logout
-                </Link>
+                </a>
                 {/* {" "}
               <a href="#">Logout</a>{" "} */}
               </li>

@@ -18,6 +18,8 @@ import authReducer from '../features/authSlice';
 import locationReducer from '../features/locationSlice';
 import forgotPasswordReducer from '../features/forgotPasswordSlice';
 import userReducer from '../features/userSlice';
+import bookingReducer from '../features/checkoutSlice';
+import paymentReducer from '../features/paymentSlice';
 // Import other reducers here...
 
 const rootReducer = combineReducers({
@@ -39,6 +41,8 @@ const rootReducer = combineReducers({
   location: locationReducer,
   forgotPassword: forgotPasswordReducer,
   user: userReducer,
+  booking: bookingReducer,
+  payment:paymentReducer
   // Add other reducers here...
 });
 

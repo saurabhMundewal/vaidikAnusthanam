@@ -11,7 +11,6 @@ export default function About() {
   const aboutPageData = useSelector((state) => state.aboutPage.data);
   const aboutPageStatus = useSelector((state) => state.aboutPage.status);
   const aboutPageMeta = aboutPageData?.about_meta;
-  console.log(aboutPageMeta?.description, "aboutPageData");
   const error = useSelector((state) => state.aboutPage.error);
   const [selectedTab, setSelectedTab] = useState("home-tab");
 

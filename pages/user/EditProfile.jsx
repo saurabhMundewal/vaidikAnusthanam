@@ -6,10 +6,21 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function EditProfile() {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.user.profile);
+
+  const handleLogout = () => {
+    // Clear session storage and cookies
+    sessionStorage.clear();
+    document.cookie.split(";").forEach((cookie) => {
+      document.cookie = cookie
+        .replace(/^ +/, "")
+        .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
+    });
+  };
+
   return (
     <div>
      <>
- <UserHeader />
+ <UserHeader handleLogout={handleLogout}/>
   {/* partial */}
   <div className="page-banner instructor-bg-blk">
     <div className="container">

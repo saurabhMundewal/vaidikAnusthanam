@@ -20,7 +20,6 @@ export default function HomePage(props) {
     homeContent,
   } = props;
 
-  console.log(props, "props");
   const handleClickFaq = (val) => {
     setIsOpen(val);
   };
@@ -210,7 +209,6 @@ export default function HomePage(props) {
             {homeContent
               ? homeContent?.content?.home_setting_features?.map(
                   (categoryData, data) => {
-                    console.log("Category Data:", categoryData);
                     return (
                       <div
                         className="col-lg-6 col-md-6"
@@ -267,7 +265,6 @@ export default function HomePage(props) {
           <div className="row g-3">
             {props?.categories
               ? props?.categories?.map((categoryData, ind) => {
-                  console.log("Category Data:", categoryData);
                   const imageUrl = `${categoryData.lib_image_location}${categoryData.lib_image}`;
                   return (
                     <div

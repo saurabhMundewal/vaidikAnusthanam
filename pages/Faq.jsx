@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchFaq } from "../features/faqSlice";
 import ContactForm from "@/components/contactForm";
+import CommonFaqGrid from "@/atoms/commonFaqGrid";
 
 export default function faq() {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export default function faq() {
   }, [status, dispatch]);
 
   useEffect(() => {
-    setIsOpen(faq[0]?.id)
+    setIsOpen(faq[0]?.id);
   }, [faq?.length]);
 
   const oddFaq = faq?.length && faq.filter((_, index) => index % 2 !== 0);
@@ -63,72 +64,32 @@ export default function faq() {
             <div className="row">
               <div className="col-lg-6">
                 <div className="accordion with-gap" id="generalFAQExample">
-                  {evenFaq ?
-                    evenFaq?.map(item  => (
-                      <div className="card" key={item?.id}>
-                        <div
-                          className="card-header"
-                          data-bs-toggle="collapse"
-                          role="button"
-                          data-bs-target="#generalOne"
-                          aria-expanded={
-                            isOpen === item?.id? "true" : "false"
-                          }
-                          aria-controls="generalOne"
-                          onClick={() => handleClickFaq(item?.id)}
-                        >
-                          {item?.title}
-                        </div>
-                        <div
-                          id="generalOne"
-                          className={`collapse ${
-                            isOpen ===item?.id ? "show" : ""
-                          }`}
-                          data-bs-parent="#generalFAQExample"
-                        >
-                          <div className="card-body">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: item?.content,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )) : null}
+                  {evenFaq
+                    ? evenFaq?.map((item) => (
+                        <CommonFaqGrid
+                          faqId={item?.id}
+                          content={item?.content}
+                          title={item?.title}
+                          handleClickFaq={handleClickFaq}
+                          isOpen={isOpen}
+                        />
+                      ))
+                    : null}
                 </div>
               </div>
               <div className="col-lg-6">
                 <div className="accordion with-gap" id="generalFAQExample2">
-                  {oddFaq ?
-                    oddFaq?.map(item => (
-                      <div className="card" key={item?.id}>
-                        <div
-                          className="card-header"
-                          data-bs-toggle="collapse"
-                          role="button"
-                          data-bs-target="#generalOne"
-                          aria-expanded={isOpen === item?.id ? "true" : "false"}
-                          aria-controls="generalOne"
-                          onClick={() => handleClickFaq(item?.id)}
-                        >
-                          {item?.title}
-                        </div>
-                        <div
-                          id="generalOne"
-                          className={`collapse ${isOpen === item?.id ? "show" : ""}`}
-                          data-bs-parent="#generalFAQExample"
-                        >
-                          <div className="card-body">
-                            <div
-                              dangerouslySetInnerHTML={{
-                                __html: item?.content,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )): null}
+                  {oddFaq
+                    ? oddFaq?.map((item) => (
+                        <CommonFaqGrid
+                          faqId={item?.id}
+                          content={item?.content}
+                          title={item?.title}
+                          handleClickFaq={handleClickFaq}
+                          isOpen={isOpen}
+                        />
+                      ))
+                    : null}
                 </div>
               </div>
             </div>
@@ -136,7 +97,7 @@ export default function faq() {
         </div>
         {/* Categories End */}
         {/* Form Start */}
-       <ContactForm />
+        <ContactForm />
       </>
     </div>
   );
