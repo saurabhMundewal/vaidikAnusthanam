@@ -33,7 +33,7 @@ const UserHeader = ({ handleLogout }) => {
               <a href="#">Book New Puja</a>{" "} *
             </li> */}
               <li className="menu-item">
-                <Link href="#" onClick={() =>handleLogout()}>
+                <Link href="javascript:(void)" onClick={() =>handleLogout()}>
                   Logout
                 </Link>
                 {/* {" "}

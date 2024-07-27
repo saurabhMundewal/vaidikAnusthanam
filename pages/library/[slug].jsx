@@ -35,12 +35,12 @@ export default function Librarypage() {
         <div className="breadcrumb-trail">
           <ul className="trail">
             <li className="trail-item">
-              <a href="#" className="trail-link">
+              <a href="javascript:(void)" className="trail-link">
                 मुख्य
               </a>
             </li>
             <li className="trail-item">
-              <a href="#" className="trail-link">
+              <a href="javascript:(void)" className="trail-link">
                 साहित्य
               </a>
             </li>

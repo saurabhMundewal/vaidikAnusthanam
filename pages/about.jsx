@@ -4,11 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAboutPageData } from '../features/aboutPageSlice';
 import HelpCenter from '@/atoms/helpCenter';
 import ContactForm from "../components/contactForm";
+import Head from 'next/head';
 
 export default function About() {
   const dispatch = useDispatch();
   const aboutPageData = useSelector((state) => state.aboutPage.data);
   const aboutPageStatus = useSelector((state) => state.aboutPage.status);
+  const aboutPageMeta = aboutPageData?.about_meta
+  console.log(aboutPageMeta?.description, 'aboutPageData')
   const error = useSelector((state) => state.aboutPage.error);
   const [selectedTab, setSelectedTab] = useState("home-tab");
 
@@ -22,10 +25,19 @@ export default function About() {
     setSelectedTab(e?.target?.id)
   }
 
+
   return (
     <>
       <>
-
+      <Head>
+        <title>{aboutPageMeta?.meta_title}</title>
+        <meta
+          name="description"
+          content={aboutPageMeta?.description}
+        />
+        <meta name="keywords" content={aboutPageMeta?.keywords} />
+        {/* Add more meta tags as needed */}
+      </Head>
         {/* partial */}
         {/* partial:partia/__subheader.html */}
         <div

@@ -510,7 +510,7 @@ export default function Checkout() {
             {/* Order Details Start */}
             <div className="sigma_notice mt-20" style={{ marginTop: 35 }}>
               <p>
-                <a href="#">Ramayan Paath-रामायण पाठ </a>{" "}
+                <a href="javascript:(void)">Ramayan Paath-रामायण पाठ </a>{" "}
               </p>
               <p>रामायण पाठ- Ramayan Paath</p>
             </div>

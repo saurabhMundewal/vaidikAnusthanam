@@ -119,7 +119,7 @@ export default function Login() {
                           />
                         </div>
                         <div className="pass-link">
-                          <a href="#" onClick={() => setIsForgotPassword(true)}>
+                          <a href="javascript:(void)" onClick={() => setIsForgotPassword(true)}>
                             Forgot password?
                           </a>
                         </div>
@@ -151,7 +151,7 @@ export default function Login() {
                         </div>
                         <div className="pass-link">
                           <a
-                            href="#"
+                            href="javascript:(void)"
                             onClick={() => setIsForgotPassword(false)}
                           >
                             Back to login

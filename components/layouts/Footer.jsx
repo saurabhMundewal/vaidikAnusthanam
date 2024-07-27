@@ -52,7 +52,7 @@ export default function Footer() {
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">Contact Us</Link>
+              <Link href="javascript:(void)">Contact Us</Link>
             </li>
           </ul>
         </div>
@@ -65,20 +65,20 @@ export default function Footer() {
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 Privacy Policy{" "}
               </Link>
             </li>
             {/*<li><i class="fas fa-om"></i><Link href="/payment-policy/">Payment Policy </Link></li>*/}
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 Refund Policy{" "}
               </Link>
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 Terms &amp; Conditions{" "}
               </Link>
             </li>
@@ -89,25 +89,25 @@ export default function Footer() {
           <ul>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 आरती
               </Link>{" "}
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 चालीसा
               </Link>{" "}
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 मंत्र
               </Link>{" "}
             </li>
             <li>
               <i className="fas fa-om" />
-              <Link href="#">
+              <Link href="javascript:(void)">
                 सत्संग साहित्य
               </Link>{" "}
             </li>
@@ -120,7 +120,7 @@ export default function Footer() {
   <div className="sigma_footer-bottom">
     <div className="container-fluid">
       <div className="sigma_footer-copyright">
-        {/*<p> Copyright © Vaidik Anushthanam - <Link href="#" class="custom-primary">2024</Link> </p>*/}
+        {/*<p> Copyright © Vaidik Anushthanam - <Link href="javascript:(void)" class="custom-primary">2024</Link> </p>*/}
         <p>
           Design &amp; Developed By{" "}
           <Link href="https://www.w2sinfotech.com/">W2S Infotech </Link>©2024. All
