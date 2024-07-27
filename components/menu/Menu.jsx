@@ -41,32 +41,32 @@ export default function Menu() {
               <h5 className="widget-title">Instagram</h5>
               <div className="row">
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/1.jpg" alt="ig" />
                   </a>
                 </div>
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/2.jpg" alt="ig" />
                   </a>
                 </div>
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/3.jpg" alt="ig" />
                   </a>
                 </div>
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/4.jpg" alt="ig" />
                   </a>
                 </div>
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/5.jpg" alt="ig" />
                   </a>
                 </div>
                 <div className="col-lg-4 col-md-4 col-sm-4 col-6">
-                  <a href="#" className="sigma_ig-item">
+                  <a href="javascript:(void)" className="sigma_ig-item">
                     <img src="./../assets/img/ig/6.jpg" alt="ig" />
                   </a>
                 </div>
@@ -79,22 +79,22 @@ export default function Menu() {
               <div className="sigma_post-share">
                 <ul className="sigma_sm square light">
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-facebook-f" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-linkedin-in" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-twitter" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-youtube" />
                     </a>
                   </li>
@@ -131,7 +131,7 @@ export default function Menu() {
                   <a href="about-us.html">Online Puja</a>{" "} */}
                 </li>
                 <li className="menu-item menu-item-has-children">
-                  <a href="#">Offline Puja</a>
+                  <a href="javascript:(void)">Offline Puja</a>
                   <ul className="sub-menu">
                     <li className="menu-item">
                       <a href="blog-grid.html">AT Temple</a>
@@ -153,7 +153,7 @@ export default function Menu() {
               </ul>
             </li>
             <li className="menu-item menu-item-has-children">
-              <a href="#">Libarary</a>
+              <a href="javascript:(void)">Libarary</a>
               <ul className="sub-menu">
                 <li className="menu-item">
                   {" "}
@@ -174,7 +174,7 @@ export default function Menu() {
               </ul>
             </li>
             <li className="menu-item menu-item-has-children">
-              <a href="#">Services</a>
+              <a href="javascript:(void)">Services</a>
               <ul className="sub-menu">
                 <li className="menu-item">
                   {" "}
@@ -254,7 +254,7 @@ export default function Menu() {
                         <a href="about-us.html">Online Pooja</a>{" "} */}
                       </li>
                       <li className="menu-item menu-item-has-children">
-                        <a href="#">Offline Pooja</a>
+                        <a href="javascript:(void)">Offline Pooja</a>
                         <ul className="sub-menu">
                           <li className="menu-item">
                             <Link href="/puja/puja-at-temples">At Temple</Link>
@@ -277,7 +277,7 @@ export default function Menu() {
                     </ul>
                   </li>
                   <li className="menu-item menu-item-has-children">
-                    <a href="#">Libarary</a>
+                    <a href="javascript:(void)">Libarary</a>
                     <ul className="sub-menu">
                       <li className="menu-item">
                         {" "}
@@ -303,7 +303,7 @@ export default function Menu() {
                     </ul>
                   </li>
                   <li className="menu-item menu-item-has-children">
-                    <a href="#">Services</a>
+                    <a href="javascript:(void)">Services</a>
                     <ul className="sub-menu">
                       <li className="menu-item">
                         <Link href="/service/astrology">Astrology</Link>
@@ -317,7 +317,7 @@ export default function Menu() {
                     <Link href="/Blog">Blog</Link>
                   </li>
                   <li className="menu-item">
-                    <Link href="#">Contact</Link>
+                    <Link href="javascript:(void)">Contact</Link>
                   </li>
                 </ul>
                 {/* Controls */}

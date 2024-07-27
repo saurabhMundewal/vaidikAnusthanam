@@ -148,7 +148,7 @@ export default function Cart() {
             {/* Coupon Code */}
             <div className="sigma_notice">
               <p>
-                Do you have a coupon code? <a href="#">Click here to apply</a>{" "}
+                Do you have a coupon code? <a href="javascript:(void)">Click here to apply</a>{" "}
               </p>
             </div>
             <div className="sigma_notice-content">

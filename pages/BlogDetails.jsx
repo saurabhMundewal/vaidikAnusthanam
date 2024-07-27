@@ -77,7 +77,7 @@
 //               <p>
 //                 I find this argument as sad as the argument that without a
 //                 belief in God{" "}
-//                 <a href="#">people would likewise be unethical.</a> Our mission
+//                 <a href="javascript:(void)">people would likewise be unethical.</a> Our mission
 //                 is to share the Good of Hinduism, Loving, Faith and Serving.
 //                 People ask questions related to Hinduism. to make a type
 //                 specimen book.
@@ -800,7 +800,7 @@ export default function BlogDetails() {
               <p>
                 I find this argument as sad as the argument that without a
                 belief in God{" "}
-                <a href="#">people would likewise be unethical.</a> Our mission
+                <a href="javascript:(void)">people would likewise be unethical.</a> Our mission
                 is to share the Good of Hinduism, Loving, Faith and Serving.
                 People ask questions related to Hinduism. to make a type
                 specimen book.
@@ -886,31 +886,31 @@ export default function BlogDetails() {
               <div className="sigma_post-single-meta-item">
                 <h6>Tags</h6>
                 <div className="tagcloud">
-                  <a href="#">Portfolio</a>
-                  <a href="#">Creative</a>
-                  <a href="#">Intuitive</a>
+                  <a href="javascript:(void)">Portfolio</a>
+                  <a href="javascript:(void)">Creative</a>
+                  <a href="javascript:(void)">Intuitive</a>
                 </div>
               </div>
               <div className="sigma_post-single-meta-item sigma_post-share">
                 <h6>Share</h6>
                 <ul className="sigma_sm">
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-facebook-f" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-linkedin-in" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-twitter" />
                     </a>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="javascript:(void)">
                       <i className="fab fa-youtube" />
                     </a>
                   </li>
@@ -1072,56 +1072,56 @@ export default function BlogDetails() {
               <ul className="sidebar-widget-list">
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Avatars <span>32</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Festivals <span>22</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Mahabharat <span>17</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Mythology <span>05</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Religion <span>32</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Uncategorized <span>12</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Ramayan <span>42</span>{" "}
                   </a>{" "}
                 </li>
                 <li>
                   {" "}
-                  <a href="#">
+                  <a href="javascript:(void)">
                     {" "}
                     Bhagwat Gita <span>04</span>{" "}
                   </a>{" "}
@@ -1134,22 +1134,22 @@ export default function BlogDetails() {
               <h5 className="widget-title">Never Miss Out</h5>
               <ul className="sigma_sm square light">
                 <li>
-                  <a href="#">
+                  <a href="javascript:(void)">
                     <i className="fab fa-facebook-f" />
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="javascript:(void)">
                     <i className="fab fa-linkedin-in" />
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="javascript:(void)">
                     <i className="fab fa-twitter" />
                   </a>
                 </li>
                 <li>
-                  <a href="#">
+                  <a href="javascript:(void)">
                     <i className="fab fa-youtube" />
                   </a>
                 </li>

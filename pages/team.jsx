@@ -60,7 +60,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -88,7 +88,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -116,7 +116,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -144,7 +144,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -172,7 +172,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -200,7 +200,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -228,7 +228,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}
@@ -256,7 +256,7 @@ export default function team() {
               <ul className="sigma_sm">
                 <li>
                   {" "}
-                  <a href="#" className="trigger-volunteers-socials">
+                  <a href="javascript:(void)" className="trigger-volunteers-socials">
                     {" "}
                     <i className="fal fa-plus" />{" "}
                   </a>{" "}

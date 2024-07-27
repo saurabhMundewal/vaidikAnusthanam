@@ -100,28 +100,28 @@ export default function Puja() {
             </div>
             <ul className="pagination mb-0">
               <li className="page-item">
-                <a className="page-link" href="#">
+                <a className="page-link" href="javascript:(void)">
                   {" "}
                   <i className="far fa-chevron-left" />{" "}
                 </a>
               </li>
               <li className="page-item">
-                <a className="page-link" href="#">
+                <a className="page-link" href="javascript:(void)">
                   1
                 </a>
               </li>
               <li className="page-item active">
-                <a className="page-link" href="#">
+                <a className="page-link" href="javascript:(void)">
                   2 <span className="sr-only">(current)</span>
                 </a>
               </li>
               <li className="page-item">
-                <a className="page-link" href="#">
+                <a className="page-link" href="javascript:(void)">
                   3
                 </a>
               </li>
               <li className="page-item">
-                <a className="page-link" href="#">
+                <a className="page-link" href="javascript:(void)">
                   {" "}
                   <i className="far fa-chevron-right" />{" "}
                 </a>

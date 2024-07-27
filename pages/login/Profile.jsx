@@ -25,17 +25,17 @@ export default function Profile() {
                   </li>
                   <li className="menu-item">
                     {" "}
-                    <a href="#">My Profile</a>{" "}
+                    <a href="javascript:(void)">My Profile</a>{" "}
                   </li>
                   <li className="menu-item">
                     <Link href="/pujaorder/Pujaorder">Book New Puja</Link>
                     {/* {" "}
-                    <a href="#">Book New Puja</a>{" "} */}
+                    <a href="javascript:(void)">Book New Puja</a>{" "} */}
                   </li>
                   <li className="menu-item">
                   <Link href="/login/Login">Logout</Link>
                     {/* {" "}
-                    <a href="#">Logout</a>{" "} */}
+                    <a href="javascript:(void)">Logout</a>{" "} */}
                   </li>
                 </ul>
                 <div className="sigma_header-controls style-2">

@@ -8,6 +8,7 @@ import Link from "next/link";
 import HelpCenter from "@/atoms/helpCenter";
 import ContactForm from "../contactForm";
 import BlogCard from "./blogCard";
+import Head from 'next/head';
 
 export default function HomePage(props) {
   const [isOpen, setIsOpen] = useState(1);
@@ -36,6 +37,17 @@ export default function HomePage(props) {
 
   return (
     <>
+      <Head>
+        <title>Home - Vaidik Anushthanam: Online & Offline Pujas</title>
+        <meta
+          name="description"
+          content={
+            "Learn about Vaidik Anushthanam, your trusted platform for authentic online and offline temple pujas. Experience divine blessings with us"
+          }
+        />
+        <meta name="keywords" content="Vaidik Anushthanam | Home Page" />
+        {/* Add more meta tags as needed */}
+      </Head>
       {/* Banner Start */}
       <div className="sigma_banner banner-3">
         <MainSlider getHomePageDetails={getHomePageDetails} />
@@ -109,7 +121,7 @@ export default function HomePage(props) {
                         key={categoryData?.data_id}
                       >
                         <Link
-                          href="#"
+                          href="javascript:(void)"
                           className="sigma_service style-1 primary-bg"
                         >
                           <div className="sigma_service-thumb">
@@ -253,7 +265,6 @@ export default function HomePage(props) {
             </p>
           </div>
           <div className="row g-3">
-            
             {props?.categories
               ? props?.categories?.map((categoryData, ind) => {
                   console.log("Category Data:", categoryData);
@@ -355,9 +366,6 @@ export default function HomePage(props) {
       {/* Form End */}
       {/* Testimonials Start */}
 
-
-
-      
       <section className="section pt-0">
         <div
           className="container testimonial-section bg-contain bg-norepeat bg-center"
