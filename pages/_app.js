@@ -2,9 +2,9 @@
 
 import "@/styles/globals.css";
 import Layout from "@/components/layouts/Layout";
-import { Provider } from 'react-redux';
-import store from '../store'; 
-import 'react-toastify/dist/ReactToastify.css';
+import { Provider } from "react-redux";
+import store from "../store";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }) {
   return (

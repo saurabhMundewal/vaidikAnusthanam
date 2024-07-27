@@ -33,7 +33,7 @@ export default function Profile() {
                     <a href="javascript:(void)">Book New Puja</a>{" "} */}
                   </li>
                   <li className="menu-item">
-                  <Link href="/login/Login">Logout</Link>
+                    <Link href="/login/Login">Logout</Link>
                     {/* {" "}
                     <a href="javascript:(void)">Logout</a>{" "} */}
                   </li>

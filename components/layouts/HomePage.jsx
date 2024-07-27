@@ -8,7 +8,7 @@ import Link from "next/link";
 import HelpCenter from "@/atoms/helpCenter";
 import ContactForm from "../contactForm";
 import BlogCard from "./blogCard";
-import Head from 'next/head';
+import Head from "next/head";
 
 export default function HomePage(props) {
   const [isOpen, setIsOpen] = useState(1);

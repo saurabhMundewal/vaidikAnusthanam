@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-
 const UserHeader = ({ handleLogout }) => {
   return (
     <header className="sigma_header header-3 can-sticky header-absolute">
@@ -33,7 +32,7 @@ const UserHeader = ({ handleLogout }) => {
               <a href="#">Book New Puja</a>{" "} *
             </li> */}
               <li className="menu-item">
-                <Link href="javascript:(void)" onClick={() =>handleLogout()}>
+                <Link href="javascript:(void)" onClick={() => handleLogout()}>
                   Logout
                 </Link>
                 {/* {" "}

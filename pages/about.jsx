@@ -1,50 +1,46 @@
-import Link from 'next/link';
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAboutPageData } from '../features/aboutPageSlice';
-import HelpCenter from '@/atoms/helpCenter';
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAboutPageData } from "../features/aboutPageSlice";
+import HelpCenter from "@/atoms/helpCenter";
 import ContactForm from "../components/contactForm";
-import Head from 'next/head';
+import Head from "next/head";
 
 export default function About() {
   const dispatch = useDispatch();
   const aboutPageData = useSelector((state) => state.aboutPage.data);
   const aboutPageStatus = useSelector((state) => state.aboutPage.status);
-  const aboutPageMeta = aboutPageData?.about_meta
-  console.log(aboutPageMeta?.description, 'aboutPageData')
+  const aboutPageMeta = aboutPageData?.about_meta;
+  console.log(aboutPageMeta?.description, "aboutPageData");
   const error = useSelector((state) => state.aboutPage.error);
   const [selectedTab, setSelectedTab] = useState("home-tab");
 
   useEffect(() => {
-    if (aboutPageStatus === 'idle') {
+    if (aboutPageStatus === "idle") {
       dispatch(fetchAboutPageData());
     }
   }, [aboutPageStatus, dispatch]);
 
   const handleChange = (e) => {
-    setSelectedTab(e?.target?.id)
-  }
-
+    setSelectedTab(e?.target?.id);
+  };
 
   return (
     <>
       <>
-      <Head>
-        <title>{aboutPageMeta?.meta_title}</title>
-        <meta
-          name="description"
-          content={aboutPageMeta?.description}
-        />
-        <meta name="keywords" content={aboutPageMeta?.keywords} />
-        {/* Add more meta tags as needed */}
-      </Head>
+        <Head>
+          <title>{aboutPageMeta?.meta_title}</title>
+          <meta name="description" content={aboutPageMeta?.description} />
+          <meta name="keywords" content={aboutPageMeta?.keywords} />
+          {/* Add more meta tags as needed */}
+        </Head>
         {/* partial */}
         {/* partial:partia/__subheader.html */}
         <div
           className="sigma_subheader dark-overlay dark-overlay-2"
           style={{
             backgroundImage:
-              "url(https://vaidikanushthanam.in/static/img/subheader.jpg)"
+              "url(https://vaidikanushthanam.in/static/img/subheader.jpg)",
           }}
         >
           <div className="container">
@@ -78,7 +74,7 @@ export default function About() {
                   style={{
                     height: "100%",
                     borderRadius: "1.7rem",
-                    paddingBottom: 10
+                    paddingBottom: 10,
                   }}
                   alt={aboutPageData?.about_data?.title1}
                   title={aboutPageData?.about_data?.title1}
@@ -98,31 +94,37 @@ export default function About() {
               <div className="col-lg-12">
                 <div className="me-lg-30" style={{ marginTop: 20 }}>
                   <div className="section-title mb-0 text-start">
-                    <p className="subtitle">{aboutPageData?.about_data?.title1}</p>
-                    <h2 className="about-title">{aboutPageData?.about_data?.title2}</h2>
+                    <p className="subtitle">
+                      {aboutPageData?.about_data?.title1}
+                    </p>
+                    <h2 className="about-title">
+                      {aboutPageData?.about_data?.title2}
+                    </h2>
                   </div>
-                  <div dangerouslySetInnerHTML={{
-                    __html: aboutPageData?.about_data?.description,
-                  }}
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: aboutPageData?.about_data?.description,
+                    }}
                   />
-
 
                   <div className="sigma_icon-block icon-block-3">
                     <div className="icon-wrapper"></div>
                     <div className="sigma_icon-block-content">
                       <h5></h5>
-                      <div dangerouslySetInnerHTML={{
-                        __html: aboutPageData?.about_data?.description2,
-                      }}
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: aboutPageData?.about_data?.description2,
+                        }}
                       />
                     </div>
                   </div>
                   <div className="sigma_icon-block icon-block-3">
                     <div className="icon-wrapper"></div>
                     <div className="sigma_icon-block-content">
-                      <div dangerouslySetInnerHTML={{
-                        __html: aboutPageData?.about_data?.description3,
-                      }}
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: aboutPageData?.about_data?.description3,
+                        }}
                       />
                     </div>
                   </div>
@@ -140,8 +142,12 @@ export default function About() {
               <div className="col-lg-12">
                 <div className="me-lg-30">
                   <div className="section-title mb-0 text-start">
-                    <p className="subtitle">{aboutPageData?.about_tab_aproach?.title1}</p>
-                    <h4 className="title">{aboutPageData?.about_tab_aproach?.title2}</h4>
+                    <p className="subtitle">
+                      {aboutPageData?.about_tab_aproach?.title1}
+                    </p>
+                    <h4 className="title">
+                      {aboutPageData?.about_tab_aproach?.title2}
+                    </h4>
                   </div>
                   <p className=" bg-transparent">
                     {aboutPageData?.about_tab_aproach?.description}
@@ -149,39 +155,39 @@ export default function About() {
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item">
                       <a
-                        className={`nav-link ${selectedTab === "home-tab" ? 'active' : ''}`}
+                        className={`nav-link ${selectedTab === "home-tab" ? "active" : ""}`}
                         id="home-tab"
                         data-bs-toggle="tab"
                         role="tab"
                         aria-controls="home"
                         onClick={handleChange}
-                        aria-selected={`${selectedTab === "home-tab" ? 'true' : 'false'}`}
+                        aria-selected={`${selectedTab === "home-tab" ? "true" : "false"}`}
                       >
                         {aboutPageData?.about_tab_aproach?.tab_title1}
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
-                        className={`nav-link ${selectedTab === "profile-tab" ? 'active' : ''}`}
+                        className={`nav-link ${selectedTab === "profile-tab" ? "active" : ""}`}
                         id="profile-tab"
                         data-bs-toggle="tab"
                         onClick={handleChange}
                         role="tab"
                         aria-controls="profile"
-                        aria-selected={`${selectedTab === "profile-tab" ? 'true' : 'false'}`}
+                        aria-selected={`${selectedTab === "profile-tab" ? "true" : "false"}`}
                       >
                         {aboutPageData?.about_tab_aproach?.tab_title2}
                       </a>
                     </li>
                     <li className="nav-item">
                       <a
-                        className={`nav-link ${selectedTab === "contact-tab" ? 'active' : ''}`}
+                        className={`nav-link ${selectedTab === "contact-tab" ? "active" : ""}`}
                         id="contact-tab"
                         data-bs-toggle="tab"
                         onClick={handleChange}
                         role="tab"
                         aria-controls="contact"
-                        aria-selected={`${selectedTab === "contact-tab" ? 'true' : 'false'}`}
+                        aria-selected={`${selectedTab === "contact-tab" ? "true" : "false"}`}
                       >
                         {aboutPageData?.about_tab_aproach?.tab_title3}
                       </a>
@@ -189,41 +195,43 @@ export default function About() {
                   </ul>
                   <div className="tab-content" id="myTabContent">
                     <div
-                      className={`tab-pane fade ${selectedTab === "home-tab" ? 'show active' : ''}`}
+                      className={`tab-pane fade ${selectedTab === "home-tab" ? "show active" : ""}`}
                       id="home"
                       role="tabpanel"
                       aria-labelledby="home-tab"
                     >
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: aboutPageData?.about_tab_aproach?.tab_description1,
+                          __html:
+                            aboutPageData?.about_tab_aproach?.tab_description1,
                         }}
                       />
                     </div>
                     <div
-                      className={`tab-pane fade ${selectedTab === "profile-tab" ? 'show active' : ''}`}
+                      className={`tab-pane fade ${selectedTab === "profile-tab" ? "show active" : ""}`}
                       id="profile"
                       role="tabpanel"
                       aria-labelledby="profile-tab"
                     >
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: aboutPageData?.about_tab_aproach?.tab_description2,
+                          __html:
+                            aboutPageData?.about_tab_aproach?.tab_description2,
                         }}
                       />
                     </div>
                     <div
-                      className={`tab-pane fade ${selectedTab === "contact-tab" ? 'show active' : ''}`}
+                      className={`tab-pane fade ${selectedTab === "contact-tab" ? "show active" : ""}`}
                       id="contact"
                       role="tabpanel"
                       aria-labelledby="contact-tab"
                     >
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: aboutPageData?.about_tab_aproach?.tab_description3,
+                          __html:
+                            aboutPageData?.about_tab_aproach?.tab_description3,
                         }}
                       />
-
                     </div>
                   </div>
                 </div>
@@ -377,8 +385,6 @@ export default function About() {
           </div>
         </div> */}
       </>
-
-
     </>
-  )
+  );
 }
