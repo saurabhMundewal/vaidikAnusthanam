@@ -13,7 +13,6 @@ export default function team() {
       dispatch(fetchTeam());
     }
   }, [status, dispatch]);
-
   return (
     <div>
       <>
@@ -52,256 +51,42 @@ export default function team() {
         <div className="section section-padding">
           <div className="container">
             <div className="row">
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/legal-advisor1.jpg"
-                      alt="Adv Ashish Pandey"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Adv Ashish Pandey</a>
-                      </h5>
-                      <p>Legal Advisor</p>
+              {team?.length ? (
+                team?.map((teamData, ind) => {
+                  return (
+                    <div className="col-lg-3 col-md-6" key={ind}>
+                      <div className="sigma_volunteers volunteers-4">
+                        <div className="sigma_volunteers-thumb">
+                          <img src={teamData?.image} alt={teamData?.name} />
+                          <ul className="sigma_sm">
+                            <li>
+                              {" "}
+                              <a
+                                href="#"
+                                className="trigger-volunteers-socials"
+                              >
+                                {" "}
+                                <i className="fal fa-plus" />{" "}
+                              </a>{" "}
+                            </li>
+                            {/**/}
+                          </ul>
+                        </div>
+                        <div className="sigma_volunteers-body">
+                          <div className="sigma_volunteers-info">
+                            <h5>
+                              <a href="#">{teamData?.name}</a>
+                            </h5>
+                            <p>{teamData?.title}</p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/pandit.jpg"
-                      alt="Pd Dhananjay Shashtri"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Pd Dhananjay Shashtri</a>
-                      </h5>
-                      <p>Pandit</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/pandit1.jpg"
-                      alt="Pd Ankit Kr Pandey"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Pd Ankit Kr Pandey</a>
-                      </h5>
-                      <p>Pandit</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/n-a7.jpg"
-                      alt="Umang Shahi"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Umang Shahi</a>
-                      </h5>
-                      <p>Business Development Manager</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/pandit2.jpg"
-                      alt="Pd. Ashutosh"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Pd. Ashutosh</a>
-                      </h5>
-                      <p>Pandit</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/n-a8.jpg"
-                      alt="Aman Singh"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Aman Singh</a>
-                      </h5>
-                      <p>Relationship Manager</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/n-a9.jpg"
-                      alt="Sunny Prajapati"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">Sunny Prajapati</a>
-                      </h5>
-                      <p />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="col-lg-3 col-md-6">
-                <div className="sigma_volunteers volunteers-4">
-                  <div className="sigma_volunteers-thumb">
-                    <img
-                      src="https://vaidikanushthanam.in/assets/setting/finance.jpg"
-                      alt="Innotech Finexa Pvt Ltd"
-                    />
-                    <ul className="sigma_sm">
-                      <li>
-                        {" "}
-                        <a
-                          href="javascript:(void)"
-                          className="trigger-volunteers-socials"
-                        >
-                          {" "}
-                          <i className="fal fa-plus" />{" "}
-                        </a>{" "}
-                      </li>
-                      {/**/}
-                    </ul>
-                  </div>
-                  <div className="sigma_volunteers-body">
-                    <div className="sigma_volunteers-info">
-                      <h5>
-                        <a href="javascript:void(0);">
-                          Innotech Finexa Pvt Ltd
-                        </a>
-                      </h5>
-                      <p>Finance</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                  );
+                })
+              ) : (
+                <p>Team Not Found...............</p>
+              )}
             </div>
           </div>
         </div>

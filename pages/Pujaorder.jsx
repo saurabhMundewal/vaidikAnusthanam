@@ -12,29 +12,29 @@ export default function Pujaoreder() {
                 {/* Logo Start */}
                 <div className="sigma_logo-wrapper">
                   <a className="navbar-brand" href="index.html">
-                    <img src="./../assets/img/logo.png" alt="logo" />
+                    <img src="https://vaidikanushthanam.com/assets/img/logo.png" alt="logo" />
                   </a>
                 </div>
                 {/* Logo End */}
                 {/* Menu */}
                 <ul className="navbar-nav">
                   <li className="menu-item">
-                    <a href="javascript:(void)">My Bookings</a>
+                    <a href="#">My Bookings</a>
                   </li>
                   <li className="menu-item">
                     <Link href="/login/Profile">My Profile</Link>
                     {/* {" "}
-              <a href="javascript:(void)">My Profile</a>{" "} */}
+              <a href="#">My Profile</a>{" "} */}
                   </li>
                   <li className="menu-item">
                     <Link href="/pujaorder/Pujaorder">Book New Puja</Link>
                     {/* {" "}
-              <a href="javascript:(void)">Book New Puja</a>{" "} */}
+              <a href="#">Book New Puja</a>{" "} */}
                   </li>
                   <li className="menu-item">
                     <Link href="/login/Login">Logout</Link>
                     {/* {" "}
-              <a href="javascript:(void)">Logout</a>{" "} */}
+              <a href="#">Logout</a>{" "} */}
                   </li>
                 </ul>
                 <div className="sigma_header-controls style-2">

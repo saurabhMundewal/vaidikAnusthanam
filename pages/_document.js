@@ -23,6 +23,7 @@ export default function Document() {
           {/* partial:partial/__stylesheets.html */}
           <link rel="stylesheet" href="./../assets/css/plugins/bootstrap.min.css" />
           <link rel="stylesheet" href="./../assets/css/plugins/animate.min.css" />
+          <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
                   
          {/* Icon Fonts */}
           <link rel="stylesheet" href="./../assets/fonts/flaticon/flaticon.css" />

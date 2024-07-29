@@ -19,12 +19,16 @@ export const fetchLibraryCategories = createAsyncThunk(
   }
 );
 
-export const fetchLibrarylistDetails = createAsyncThunk(
+  export const fetchLibrarylistDetails = createAsyncThunk(
     'library/fetchLibrarylistDetails',
-    async (liblistSlug) => {
-      const apiUrl = liblistSlug ? `/Library/LibraryList/${liblistSlug}` : `/Library/LibraryList`
-      const response = await axiosInstance.post(apiUrl);   
-      return JSON.parse(response?.data?.datas);
+    async (liblistSlug, { rejectWithValue }) => {
+      try {
+        const apiUrl = liblistSlug ? `/Library/LibraryList/${liblistSlug}` : `/Library/LibraryList`
+      const response = await axiosInstance.post(apiUrl); 
+        return JSON.parse(response?.data?.datas);
+      } catch (error) {
+        return rejectWithValue(error.response.data);
+      }
     }
   );
 
@@ -35,6 +39,7 @@ export const fetchLibraryCategoryDetails = createAsyncThunk(
     return JSON.parse(response?.data?.datas);
   }
 );
+
 
 // Create the slice
 const librarySlice = createSlice({

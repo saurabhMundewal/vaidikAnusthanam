@@ -20,19 +20,46 @@ export default function HomePage(props) {
     homeContent,
   } = props;
 
-  console.log(props, "props");
   const handleClickFaq = (val) => {
     setIsOpen(val);
   };
 
+  // this slider updated testimonials today
   const test_settings = {
-    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
+    adaptiveHeight: true,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 5000,
+    arrows: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
 
   return (
@@ -49,6 +76,7 @@ export default function HomePage(props) {
         {/* Add more meta tags as needed */}
       </Head>
       {/* Banner Start */}
+
       <div className="sigma_banner banner-3">
         <MainSlider getHomePageDetails={getHomePageDetails} />
       </div>
@@ -121,7 +149,7 @@ export default function HomePage(props) {
                         key={categoryData?.data_id}
                       >
                         <Link
-                          href="javascript:(void)"
+                          href="#"
                           className="sigma_service style-1 primary-bg"
                         >
                           <div className="sigma_service-thumb">
@@ -166,21 +194,15 @@ export default function HomePage(props) {
               प्रोत्साहित करते हैं।
             </p>
             <li>
-              <Link className="sigma_btn-custom-1" href="puja/Puja">
+              <Link className="sigma_btn-custom-1" href="/Puja">
                 View All Puja
               </Link>
             </li>
-            {/* <a
-                href="https://vaidikanushthanam.in/pujas"
-                className="sigma_btn-custom-1"
-              >
-                View All Puja
-              </a> */}
           </div>
           <div className="row g-3">
             {poojaData?.puja_data &&
-              poojaData?.puja_data?.map((pooja) => {
-                return <PoojaCard pooja={pooja} />;
+              poojaData.puja_data.slice(-6).map((pooja) => {
+                return <PoojaCard pooja={pooja} key={pooja.id} />;
               })}
           </div>
         </div>
@@ -210,7 +232,6 @@ export default function HomePage(props) {
             {homeContent
               ? homeContent?.content?.home_setting_features?.map(
                   (categoryData, data) => {
-                    console.log("Category Data:", categoryData);
                     return (
                       <div
                         className="col-lg-6 col-md-6"
@@ -267,7 +288,6 @@ export default function HomePage(props) {
           <div className="row g-3">
             {props?.categories
               ? props?.categories?.map((categoryData, ind) => {
-                  console.log("Category Data:", categoryData);
                   const imageUrl = `${categoryData.lib_image_location}${categoryData.lib_image}`;
                   return (
                     <div
@@ -366,6 +386,7 @@ export default function HomePage(props) {
       {/* Form End */}
       {/* Testimonials Start */}
 
+      {/* testimonial updated slider today */}
       <section className="section pt-0">
         <div
           className="container testimonial-section bg-contain bg-norepeat bg-center"
@@ -381,9 +402,10 @@ export default function HomePage(props) {
             <div className="sigma_testimonial-slider">
               <Slider {...test_settings}>
                 {getHomePageDetails?.testimonial?.map((testimonial, ind) => (
-                  <div className="sigma_testimonial-inner active" key={ind}>
+                  <div className="sigma_testimonial-inner" key={ind}>
                     <div className="sigma_service-thumb">
                       <img
+                        className="testimonial-user-img"
                         src={testimonial?.test_image}
                         alt={testimonial?.test_title}
                       />
@@ -396,7 +418,7 @@ export default function HomePage(props) {
                             <i className="fas fa-star active" />
                             <i className="fas fa-star active" />
                             <i className="fas fa-star active" />
-                            <i className="far fa-star" />
+                            <i className="far fa-star active" />
                           </div>
                         </div>
                         <div
@@ -417,12 +439,6 @@ export default function HomePage(props) {
               </Slider>
             </div>
           </div>
-          {/* <div className="text-center mt-4">
-              <div className="sigma_arrows style-2">
-                <i className="far fa-chevron-left slick-arrow slider-prev" />
-                <i className="far fa-chevron-right slick-arrow slider-next" />
-              </div>
-            </div> */}
         </div>
       </section>
       {/* Testimonials End */}

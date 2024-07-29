@@ -1,36 +1,53 @@
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axiosInstance from "../lib/axiosInstance"; // Replace with your actual axios instance path
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import HelpCenter from "../atoms/helpCenter";
+import Link from "next/link";
+import PoojaCard from "@/atoms/pujaCard";
+import Head from "next/head";
+import { fetchPuja } from "../features/poojaSlice";
+import Pagination from "@/atoms/pagination";
 
-export default function Puja() {
+const PujaPage = () => {
   const router = useRouter();
-  const { puja } = router.query;
-  const [pujaData, setPujaData] = useState([]);
+  const dispatch = useDispatch();
+  const pujaData = useSelector((state) => state?.pooja?.puja);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(pujaData?.puja_data?.length / 9);
 
-  const fetchPuja = async (puja) => {
-    try {
-      const response = await axiosInstance.post(`/Pujas/pujaList/${puja}`);
-      if (response?.status === 202) {
-        setPujaData([]);
-      }
-      setPujaData(JSON.parse(response?.data?.datas));
-    } catch (error) {
-      setPujaData([]);
-      console.error("Error fetching puja data:", error);
-    }
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
+  // const { slug } = router.query;
+  // const [pujaData, setPujaData] = useState([]);
+
+  const indexOfLastItem = currentPage * 9;
+  const indexOfFirstItem = indexOfLastItem - 9;
+  const currentItems = pujaData?.puja_data?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   useEffect(() => {
-    if (puja) {
-      fetchPuja(puja);
-    }
-  }, [puja]);
+    dispatch(fetchPuja());
+  }, []);
 
   return (
     <div>
       <>
         {/* partial */}
+        <Head>
+          <title>{pujaData?.puja_meta?.puja_metatitle}</title>
+          <meta
+            name="description"
+            content={"pujaData?.puja_meta?.puja_meta_description"}
+          />
+          <meta
+            name="keywords"
+            content={pujaData?.puja_meta?.puja_meta_keywords}
+          />
+          {/* Add more meta tags as needed */}
+        </Head>
         <div
           className="sigma_subheader dark-overlay dark-overlay-2"
           style={{ backgroundImage: "url(./../assets/img/subheader.jpg)" }}
@@ -46,12 +63,12 @@ export default function Puja() {
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                   <li className="breadcrumb-item">
-                    <a className="btn-link" href="/">
+                    <Link className="btn-link" href="/">
                       Home
-                    </a>
+                    </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    Pooja
+                    {"All Puja"}
                   </li>
                 </ol>
               </nav>
@@ -73,117 +90,21 @@ export default function Puja() {
             </div>
             <div className="row row g-3">
               {pujaData?.puja_data?.length
-                ? pujaData?.puja_data?.map((puja, index) => (
-                    <div key={index} className="col-lg-4 col-md-6">
-                      <div className="sigma_service style-2">
-                        <div className="sigma_service-thumb">
-                          <img
-                            src={`${puja.puja_image_link}${puja?.puja_image}`}
-                            alt="img"
-                          />
-                        </div>
-                        <div className="sigma_service-body">
-                          <h3>
-                            <a href="product-single.html">{puja.puja_title}</a>
-                          </h3>
-                          <Link
-                            className="sigma_btn-custom"
-                            href="/product/Product"
-                          >
-                            Participate
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))
+                ? currentItems?.map((puja, index) => <PoojaCard pooja={puja} />)
                 : "No Record Found"}
             </div>
-            <ul className="pagination mb-0">
-              <li className="page-item">
-                <a className="page-link" href="javascript:(void)">
-                  {" "}
-                  <i className="far fa-chevron-left" />{" "}
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="javascript:(void)">
-                  1
-                </a>
-              </li>
-              <li className="page-item active">
-                <a className="page-link" href="javascript:(void)">
-                  2 <span className="sr-only">(current)</span>
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="javascript:(void)">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="javascript:(void)">
-                  {" "}
-                  <i className="far fa-chevron-right" />{" "}
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="section section-padding">
-          <div className="container">
-            <div className="section-title text-center">
-              <p className="subtitle">WAYS WE CAN HELP</p>
-              <h4 className="title">Angels Ready To Help</h4>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
             </div>
-            <div className="row align-items-center position-relative">
-              <div className="col-md-6">
-                <div className="sigma_cta primary-bg">
-                  <img
-                    className="d-none d-lg-block"
-                    src="./../assets/img/cta/1.png"
-                    alt="cta"
-                  />
-                  <div className="sigma_cta-content">
-                    <span className="fw-600 custom-secondary">
-                      Need Help, Call Our HOTLINE!
-                    </span>
-                    <h4 className="text-white">+1 212-683-9756</h4>
-                  </div>
-                </div>
-              </div>
-              <span className="sigma_cta-sperator d-none d-lg-flex">or</span>
-              <div className="col-md-6">
-                <div className="sigma_cta primary-bg">
-                  <div className="sigma_cta-content">
-                    <form method="post">
-                      <label className="mb-0 text-white">
-                        Temple Newsletter
-                      </label>
-                      <div className="sigma_search-adv-input">
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Enter email address"
-                          name="search"
-                          defaultValue=""
-                        />
-                        <button type="submit" name="button">
-                          <i className="fa fa-search" />
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                  <img
-                    className="d-none d-lg-block"
-                    src="./../assets/img/cta/2.png"
-                    alt="cta"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+        <HelpCenter />
       </>
     </div>
   );
-}
+};
+
+export default PujaPage;

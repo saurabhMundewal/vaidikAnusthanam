@@ -12,19 +12,7 @@ export default function Profile() {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.user.profile);
   const status = useSelector((state) => state.user.status);
-
   const router = useRouter();
-
-  const handleLogout = () => {
-    // Clear session storage and cookies
-    console.log("i am here");
-    sessionStorage.clear();
-    document.cookie.split(";").forEach((cookie) => {
-      document.cookie = cookie
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
-    });
-  };
 
   useEffect(() => {
     if (status === "idle") {
@@ -38,12 +26,10 @@ export default function Profile() {
     }
   }, [userType, userid]);
 
-  console.log(profile, "profile");
-
   return (
     <div>
       <>
-        <UserHeader handleLogout={handleLogout} />
+        <UserHeader />
         {/* partial */}
         <div className="page-banner instructor-bg-blk">
           <div className="container">

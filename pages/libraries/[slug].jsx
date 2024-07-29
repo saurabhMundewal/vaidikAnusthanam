@@ -16,10 +16,9 @@ export default function Librarypage() {
       setLibData(JSON.parse(response?.data?.datas));
     } catch (error) {
       setLibData([]);
-      console.error("Error fetching puja data:", error);
+      console.error("Error fetching Library data:", error?.message);
     }
   };
-  console.log(libData, 'libData')
 
   useEffect(() => {
     if (slug) {
@@ -35,12 +34,12 @@ export default function Librarypage() {
         <div className="breadcrumb-trail">
           <ul className="trail">
             <li className="trail-item">
-              <a href="javascript:(void)" className="trail-link">
+              <a href="#" className="trail-link">
                 मुख्य
               </a>
             </li>
             <li className="trail-item">
-              <a href="javascript:(void)" className="trail-link">
+              <a href="#" className="trail-link">
                 साहित्य
               </a>
             </li>
@@ -55,8 +54,6 @@ export default function Librarypage() {
         <div className="section section-padding">
           <div className="container">
             <div className="img-container">
-              {console.log(libData?.library_list, '.........')}
-
               <img src="https://images.astroyogi.com/astroyogi2017/hindi/images/spiritual/aartiBanner/aarti_home.png" />
             </div>
             <div className="row product-grid">

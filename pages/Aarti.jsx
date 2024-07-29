@@ -10,12 +10,12 @@ export default function Aarti() {
         <div className="breadcrumb-trail">
           <ul className="trail">
             <li className="trail-item">
-              <a href="javascript:(void)" className="trail-link">
+              <a href="#" className="trail-link">
                 मुख्य
               </a>
             </li>
             <li className="trail-item">
-              <a href="javascript:(void)" className="trail-link">
+              <a href="#" className="trail-link">
                 साहित्य
               </a>
             </li>

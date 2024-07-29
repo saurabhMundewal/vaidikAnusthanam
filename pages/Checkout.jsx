@@ -1,589 +1,634 @@
-
-
 // updated code checkout new version
-import React from 'react'
-import Link from 'next/link'
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import axiosInstance from "../lib/axiosInstance"
+import axios from "axios"
+import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from "react-toastify";
+import {
+  fetchCountries,
+  fetchStates,
+  fetchCities,
+} from "../features/locationSlice";
+import { submitBookingForm } from "../features/checkoutSlice";
+import { submitBookingPayment } from "../features/paymentSlice";
+import Cookies from "js-cookie";
+
 export default function Checkout() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { countries, states, cities, loading } = useSelector(
+    (state) => state.location
+  );
+  const userid = Cookies.get("id");
+ // const packageing_id = getItemWithExpiration("package_id")
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [packageingId, setPackageingId] = useState('');
+  const [isCoupenApply, setIsCoupenApply] = useState(false);
+  const [pujaData, setPujaData] = useState(null);
+  const [formData, setFormData] = useState({
+    packages_id: "",
+    puja_id: "",
+    puja_type: "",
+    member_id: "",
+    price: "",
+    puja_date: "",
+    first_name: "",
+    last_name: "",
+    phone: "",
+    email: "",
+    address_1: "",
+    address_2: "",
+    country: "",
+    state: "",
+    city: "",
+    pincode: "",
+    coupon_code: "",
+    coupon_code_expiry: "",
+    coupon_code_discount: 0,
+    sub_total: '',
+    gst_amount: '',
+    grand_total: '',
+    cutomer_notes: "",
+  });
+
+  useEffect(() => {
+    // Delay setting the state by 2 seconds (2000 milliseconds)
+    const timeout = setTimeout(() => {
+      const packageId = getItemWithExpiration("package_id");
+      setPackageingId(packageId);
+    }, 2000);
+
+    // Cleanup the timeout when the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    const data = sessionStorage.getItem("selected_pooja");
+    if (data) {
+      setPujaData(JSON.parse(data));
+    }
+  }, []);
+
+  function getItemWithExpiration(key) {
+    const itemStr = sessionStorage.getItem(key);
+    if (!itemStr) return null;
+
+    const item = JSON.parse(itemStr);
+    const now = new Date().getTime();
+
+    if (now > item.expiration) {
+      sessionStorage.removeItem(key);
+      return null;
+    }
+
+    return item.value;
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleCountryChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    dispatch(fetchStates(event.target.value));
+  };
+
+  const handleApplyCoupon = async () => {
+    try {
+      const response = await axiosInstance.post('Pujas/couponcodeVerification', {
+        coupon_code: formData?.coupon_code,
+        member_id: userid,
+        puja_package_id: packageingId
+      });
+      if (response.data?.status === 200) {
+        const coupenData = JSON.parse(response?.data?.datas)
+        setIsCoupenApply(true)
+        setFormData({
+          ...formData,
+          'coupon_code': coupenData?.coupon_code,
+          'coupon_code_expiry': coupenData?.coupon_code_expiry,
+          'coupon_code_discount': coupenData?.coupon_discount_amount,
+          'sub_total': coupenData?.sub_total,
+          'gst_amount': coupenData?.gst_amount,
+          'grand_total': coupenData?.grand_total,
+        });
+        setSuccessMessage('Coupon applied successfully!');
+        setError('');
+      } else {
+        setIsCoupenApply(false)
+        setError('Invalid coupon code');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      setIsCoupenApply(false)
+      setSuccessMessage('');
+      setError('An error occurred while verifying the coupon code');
+    }
+  };
+
+  const findPujaPackageById =
+  packageingId && pujaData?.puja_packages?.find(packageDetails => packageDetails.puja_packages_id === packageingId);
+
+ 
+  const handleStateChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    dispatch(fetchCities(event.target.value));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (getItemWithExpiration("package_id") === null) {
+      toast.error(
+        "Session Expired, Please select package again and complete the checkout"
+      );
+      setTimeout(() => {
+        router.push(`/pujaDetail/${pujaData?.puja_slug}`);
+      }, 2000);
+    } else {
+      try {
+        const responseOrder = await dispatch(
+          submitBookingForm({
+            packages_id: getItemWithExpiration("package_id"),
+            puja_id: pujaData?.puja_id,
+            puja_type: pujaData?.puja_slug,
+            member_id: userid,
+            price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+            puja_date: formData?.puja_date,
+            first_name: formData?.first_name,
+            last_name: formData?.last_name,
+            phone: formData?.phone,
+            email: formData?.email,
+            address_1: formData?.address_1,
+            address_2: formData?.address_2,
+            country: formData?.country,
+            state: formData?.state,
+            city: formData?.city,
+            pincode: formData?.pincode,
+            cutomer_notes: formData?.cutomer_notes,
+          })
+        ).unwrap(); // Use unwrap to get the direct payload from the action
+
+        if (responseOrder?.id) {
+          const orderData = await axios.post("/api/razorpay-order", {
+            amount: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+            currency: "INR",
+          });
+
+          const { id: order_id, currency, amount } = orderData.data;
+
+          const options = {
+            key: "rzp_test_npfutZLyZxi54o", // Enter the Key ID generated from the Dashboard
+            amount,
+            currency,
+            name: "vaidikanushthanam",
+            description: "Test Transaction",
+            image: "https://vaidikanushthanam.com/assets/img/logo.png",
+            order_id, // This is a sample Order ID. Pass the `id` obtained in Step 1
+            handler: async function (response) {
+              // Handle successful payment capture
+              toast.success("Payment captured successfully", response);
+              try {
+                const captureResponse = await dispatch(
+                  submitBookingPayment({
+                    member_id: userid,
+                    payment_id: responseOrder?.id,
+                    transection_id: response.razorpay_payment_id,
+                    payment_status: "Success",
+                    price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                    payment_mode: "razorpay",
+                    coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                    coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                    coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
+                  })
+                ).unwrap();
+
+                router.push(`/user/myBookings`);
+
+                // Handle further actions on successful payment capture
+              } catch (error) {
+                console.error("Error capturing payment:", error.message);
+                toast.error("Payment capture failed");
+              }
+            },
+            prefill: {
+              name: `${formData.first_name} ${formData.last_name}`,
+              email: formData.email,
+              contact: formData.phone,
+            },
+            notes: {
+              address: `${formData.address_1} ${formData.address_2}`,
+            },
+            theme: {
+              color: "#3399cc",
+            },
+          };
+
+          const rzp1 = new Razorpay(options);
+          rzp1.on("payment.failed", async function (response) {
+            toast.error("Payment failed", response.error);
+            try {
+              const captureResponse = await dispatch(
+                submitBookingPayment({
+                  member_id: userid,
+                  payment_id: responseOrder?.id,
+                  transection_id: response.error.code, // Use response.error.code or appropriate field
+                  payment_status: "Failure",
+                  price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                  payment_mode: "razorpay",
+                  coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                  coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                  coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
+                })
+              ).unwrap();
+              console.error("Payment capture failed:", captureResponse);
+            } catch (error) {
+              console.error("Error capturing payment failure:", error.message);
+              toast.error("Error capturing payment failure");
+            }
+          });
+
+          rzp1.open();
+        } else {
+          toast.error("Failed to submit booking form");
+        }
+      } catch (error) {
+        toast.error("An error occurred: " + error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    dispatch(fetchCountries());
+  }, [dispatch]);
+
   return (
     <div>
       <>
-  
- 
-  {/* partial */}
-  {/* partial:partia/__subheader.html */}
-  <div
-    className="sigma_subheader dark-overlay dark-overlay-2"
-    style={{
-      backgroundImage:
-        "url(https://vaidikanushthanam.in/static/img/subheader.jpg)"
-    }}
-  >
-    <div className="container">
-      <div className="sigma_subheader-inner">
-        <div className="sigma_subheader-text">
-          <h1>Checkout</h1>
+        {/* partial */}
+        {/* partial:partia/__subheader.html */}
+        <div
+          className="sigma_subheader dark-overlay dark-overlay-2"
+          style={{
+            backgroundImage:
+              "url(https://vaidikanushthanam.in/static/img/subheader.jpg)",
+          }}
+        >
+          <div className="container">
+            <div className="sigma_subheader-inner">
+              <div className="sigma_subheader-text">
+                <h1>Checkout</h1>
+              </div>
+              <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                  <li className="breadcrumb-item">
+                    <a className="btn-link" href="/">
+                      Home
+                    </a>
+                  </li>
+                  <li className="breadcrumb-item active" aria-current="page">
+                    Checkout
+                  </li>
+                </ol>
+              </nav>
+            </div>
+          </div>
         </div>
-        <nav aria-label="breadcrumb">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <a className="btn-link" href="/">
-                Home
-              </a>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Checkout
-            </li>
-          </ol>
-        </nav>
-      </div>
-    </div>
-  </div>
-  {/* partial */}
-  {/* Checkout Start */}
-  <div className="section">
-    <div className="container">
-      <form method="post">
-        <div className="row">
-          <div className="col-xl-12">
-            <h4>Booking Details</h4>
-          </div>
-          <div className="col-xl-7">
-            {/* Buyer Info Start */}
-            <div className="row">
-              <div className="form-group col-xl-12">
-                <label htmlFor="puja_date">
-                  Select Puja Date <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="datetime-local"
-                  placeholder="Select Puaj Date"
-                  name="puja_date"
-                  id="puja_date"
-                  className="form-control"
-                  defaultValue="2024-05-02T20:26"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="first_name">
-                  First Name <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="First Name"
-                  name="first_name"
-                  id="first_name"
-                  className="form-control"
-                  defaultValue="Abhay Pratap singh"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="last_name">
-                  Last Name <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Last Name"
-                  name="last_name"
-                  id="last_name"
-                  className="form-control"
-                  defaultValue="Meerut"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="phone">
-                  Phone Number <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Phone Number"
-                  name="phone"
-                  id="phone"
-                  className="form-control"
-                  defaultValue={7906225663}
-                  readOnly=""
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="email">
-                  Email Address <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  name="email"
-                  id="email"
-                  className="form-control"
-                  defaultValue="jbbabhay@gmail.com"
-                  readOnly=""
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="address_1">
-                  Street Address 1 <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Street Address One"
-                  name="address_1"
-                  id="address_1"
-                  className="form-control"
-                  defaultValue="Testing"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="address_2">Street Address 2</label>
-                <input
-                  type="text"
-                  placeholder="Street Address Two (Optional)"
-                  name="address_2"
-                  id="address_2"
-                  className="form-control"
-                  defaultValue="Testing"
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="country">
-                  Country <span className="text-danger">*</span>
-                </label>
-                <select className="form-control" name="country" id="country">
-                  <option value="">Select a Country</option>
-                  <option value="Afghanistan">Afghanistan</option>
-                  <option value="Albania">Albania</option>
-                  <option value="Algeria">Algeria</option>
-                  <option value="American Samoa">American Samoa</option>
-                  <option value="Andorra">Andorra</option>
-                  <option value="Angola">Angola</option>
-                  <option value="Anguilla">Anguilla</option>
-                  <option value="Antarctica">Antarctica</option>
-                  <option value="Antigua And Barbuda">
-                    Antigua And Barbuda
-                  </option>
-                  <option value="Argentina">Argentina</option>
-                  <option value="Armenia">Armenia</option>
-                  <option value="Aruba">Aruba</option>
-                  <option value="Australia">Australia</option>
-                  <option value="Austria">Austria</option>
-                  <option value="Azerbaijan">Azerbaijan</option>
-                  <option value="Bahamas The">Bahamas The</option>
-                  <option value="Bahrain">Bahrain</option>
-                  <option value="Bangladesh">Bangladesh</option>
-                  <option value="Barbados">Barbados</option>
-                  <option value="Belarus">Belarus</option>
-                  <option value="Belgium">Belgium</option>
-                  <option value="Belize">Belize</option>
-                  <option value="Benin">Benin</option>
-                  <option value="Bermuda">Bermuda</option>
-                  <option value="Bhutan">Bhutan</option>
-                  <option value="Bolivia">Bolivia</option>
-                  <option value="Bosnia and Herzegovina">
-                    Bosnia and Herzegovina
-                  </option>
-                  <option value="Botswana">Botswana</option>
-                  <option value="Bouvet Island">Bouvet Island</option>
-                  <option value="Brazil">Brazil</option>
-                  <option value="British Indian Ocean Territory">
-                    British Indian Ocean Territory
-                  </option>
-                  <option value="Brunei">Brunei</option>
-                  <option value="Bulgaria">Bulgaria</option>
-                  <option value="Burkina Faso">Burkina Faso</option>
-                  <option value="Burundi">Burundi</option>
-                  <option value="Cambodia">Cambodia</option>
-                  <option value="Cameroon">Cameroon</option>
-                  <option value="Canada">Canada</option>
-                  <option value="Cape Verde">Cape Verde</option>
-                  <option value="Cayman Islands">Cayman Islands</option>
-                  <option value="Central African Republic">
-                    Central African Republic
-                  </option>
-                  <option value="Chad">Chad</option>
-                  <option value="Chile">Chile</option>
-                  <option value="China">China</option>
-                  <option value="Christmas Island">Christmas Island</option>
-                  <option value="Cocos (Keeling) Islands">
-                    Cocos (Keeling) Islands
-                  </option>
-                  <option value="Colombia">Colombia</option>
-                  <option value="Comoros">Comoros</option>
-                  <option value="Cook Islands">Cook Islands</option>
-                  <option value="Costa Rica">Costa Rica</option>
-                  <option value="Cote D'Ivoire (Ivory Coast)">
-                    Cote D'Ivoire (Ivory Coast)
-                  </option>
-                  <option value="Croatia (Hrvatska)">Croatia (Hrvatska)</option>
-                  <option value="Cuba">Cuba</option>
-                  <option value="Cyprus">Cyprus</option>
-                  <option value="Czech Republic">Czech Republic</option>
-                  <option value="Democratic Republic Of The Congo">
-                    Democratic Republic Of The Congo
-                  </option>
-                  <option value="Denmark">Denmark</option>
-                  <option value="Djibouti">Djibouti</option>
-                  <option value="Dominica">Dominica</option>
-                  <option value="Dominican Republic">Dominican Republic</option>
-                  <option value="East Timor">East Timor</option>
-                  <option value="Ecuador">Ecuador</option>
-                  <option value="Egypt">Egypt</option>
-                  <option value="El Salvador">El Salvador</option>
-                  <option value="Equatorial Guinea">Equatorial Guinea</option>
-                  <option value="Eritrea">Eritrea</option>
-                  <option value="Estonia">Estonia</option>
-                  <option value="Ethiopia">Ethiopia</option>
-                  <option value="External Territories of Australia">
-                    External Territories of Australia
-                  </option>
-                  <option value="Falkland Islands">Falkland Islands</option>
-                  <option value="Faroe Islands">Faroe Islands</option>
-                  <option value="Fiji Islands">Fiji Islands</option>
-                  <option value="Finland">Finland</option>
-                  <option value="France">France</option>
-                  <option value="French Guiana">French Guiana</option>
-                  <option value="French Polynesia">French Polynesia</option>
-                  <option value="French Southern Territories">
-                    French Southern Territories
-                  </option>
-                  <option value="Gabon">Gabon</option>
-                  <option value="Gambia The">Gambia The</option>
-                  <option value="Georgia">Georgia</option>
-                  <option value="Germany">Germany</option>
-                  <option value="Ghana">Ghana</option>
-                  <option value="Gibraltar">Gibraltar</option>
-                  <option value="Greece">Greece</option>
-                  <option value="Greenland">Greenland</option>
-                  <option value="Grenada">Grenada</option>
-                  <option value="Guadeloupe">Guadeloupe</option>
-                  <option value="Guam">Guam</option>
-                  <option value="Guatemala">Guatemala</option>
-                  <option value="Guernsey and Alderney">
-                    Guernsey and Alderney
-                  </option>
-                  <option value="Guinea">Guinea</option>
-                  <option value="Guinea-Bissau">Guinea-Bissau</option>
-                  <option value="Guyana">Guyana</option>
-                  <option value="Haiti">Haiti</option>
-                  <option value="Heard and McDonald Islands">
-                    Heard and McDonald Islands
-                  </option>
-                  <option value="Honduras">Honduras</option>
-                  <option value="Hong Kong S.A.R.">Hong Kong S.A.R.</option>
-                  <option value="Hungary">Hungary</option>
-                  <option value="Iceland">Iceland</option>
-                  <option value="India" selected="">
-                    India
-                  </option>
-                  <option value="Indonesia">Indonesia</option>
-                  <option value="Iran">Iran</option>
-                  <option value="Iraq">Iraq</option>
-                  <option value="Ireland">Ireland</option>
-                  <option value="Israel">Israel</option>
-                  <option value="Italy">Italy</option>
-                  <option value="Jamaica">Jamaica</option>
-                  <option value="Japan">Japan</option>
-                  <option value="Jersey">Jersey</option>
-                  <option value="Jordan">Jordan</option>
-                  <option value="Kazakhstan">Kazakhstan</option>
-                  <option value="Kenya">Kenya</option>
-                  <option value="Kiribati">Kiribati</option>
-                  <option value="Korea North">Korea North</option>
-                  <option value="Korea South">Korea South</option>
-                  <option value="Kuwait">Kuwait</option>
-                  <option value="Kyrgyzstan">Kyrgyzstan</option>
-                  <option value="Laos">Laos</option>
-                  <option value="Latvia">Latvia</option>
-                  <option value="Lebanon">Lebanon</option>
-                  <option value="Lesotho">Lesotho</option>
-                  <option value="Liberia">Liberia</option>
-                  <option value="Libya">Libya</option>
-                  <option value="Liechtenstein">Liechtenstein</option>
-                  <option value="Lithuania">Lithuania</option>
-                  <option value="Luxembourg">Luxembourg</option>
-                  <option value="Macau S.A.R.">Macau S.A.R.</option>
-                  <option value="Macedonia">Macedonia</option>
-                  <option value="Madagascar">Madagascar</option>
-                  <option value="Malawi">Malawi</option>
-                  <option value="Malaysia">Malaysia</option>
-                  <option value="Maldives">Maldives</option>
-                  <option value="Mali">Mali</option>
-                  <option value="Malta">Malta</option>
-                  <option value="Man (Isle of)">Man (Isle of)</option>
-                  <option value="Marshall Islands">Marshall Islands</option>
-                  <option value="Martinique">Martinique</option>
-                  <option value="Mauritania">Mauritania</option>
-                  <option value="Mauritius">Mauritius</option>
-                  <option value="Mayotte">Mayotte</option>
-                  <option value="Mexico">Mexico</option>
-                  <option value="Micronesia">Micronesia</option>
-                  <option value="Moldova">Moldova</option>
-                  <option value="Monaco">Monaco</option>
-                  <option value="Mongolia">Mongolia</option>
-                  <option value="Montserrat">Montserrat</option>
-                  <option value="Morocco">Morocco</option>
-                  <option value="Mozambique">Mozambique</option>
-                  <option value="Myanmar">Myanmar</option>
-                  <option value="Namibia">Namibia</option>
-                  <option value="Nauru">Nauru</option>
-                  <option value="Nepal">Nepal</option>
-                  <option value="Netherlands Antilles">
-                    Netherlands Antilles
-                  </option>
-                  <option value="Netherlands The">Netherlands The</option>
-                  <option value="New Caledonia">New Caledonia</option>
-                  <option value="New Zealand">New Zealand</option>
-                  <option value="Nicaragua">Nicaragua</option>
-                  <option value="Niger">Niger</option>
-                  <option value="Nigeria">Nigeria</option>
-                  <option value="Niue">Niue</option>
-                  <option value="Norfolk Island">Norfolk Island</option>
-                  <option value="Northern Mariana Islands">
-                    Northern Mariana Islands
-                  </option>
-                  <option value="Norway">Norway</option>
-                  <option value="Oman">Oman</option>
-                  <option value="Pakistan">Pakistan</option>
-                  <option value="Palau">Palau</option>
-                  <option value="Palestinian Territory Occupied">
-                    Palestinian Territory Occupied
-                  </option>
-                  <option value="Panama">Panama</option>
-                  <option value="Papua new Guinea">Papua new Guinea</option>
-                  <option value="Paraguay">Paraguay</option>
-                  <option value="Peru">Peru</option>
-                  <option value="Philippines">Philippines</option>
-                  <option value="Pitcairn Island">Pitcairn Island</option>
-                  <option value="Poland">Poland</option>
-                  <option value="Portugal">Portugal</option>
-                  <option value="Puerto Rico">Puerto Rico</option>
-                  <option value="Qatar">Qatar</option>
-                  <option value="Republic Of The Congo">
-                    Republic Of The Congo
-                  </option>
-                  <option value="Reunion">Reunion</option>
-                  <option value="Romania">Romania</option>
-                  <option value="Russia">Russia</option>
-                  <option value="Rwanda">Rwanda</option>
-                  <option value="Saint Helena">Saint Helena</option>
-                  <option value="Saint Kitts And Nevis">
-                    Saint Kitts And Nevis
-                  </option>
-                  <option value="Saint Lucia">Saint Lucia</option>
-                  <option value="Saint Pierre and Miquelon">
-                    Saint Pierre and Miquelon
-                  </option>
-                  <option value="Saint Vincent And The Grenadines">
-                    Saint Vincent And The Grenadines
-                  </option>
-                  <option value="Samoa">Samoa</option>
-                  <option value="San Marino">San Marino</option>
-                  <option value="Sao Tome and Principe">
-                    Sao Tome and Principe
-                  </option>
-                  <option value="Saudi Arabia">Saudi Arabia</option>
-                  <option value="Senegal">Senegal</option>
-                  <option value="Serbia">Serbia</option>
-                  <option value="Seychelles">Seychelles</option>
-                  <option value="Sierra Leone">Sierra Leone</option>
-                  <option value="Singapore">Singapore</option>
-                  <option value="Slovakia">Slovakia</option>
-                  <option value="Slovenia">Slovenia</option>
-                  <option value="Smaller Territories of the UK">
-                    Smaller Territories of the UK
-                  </option>
-                  <option value="Solomon Islands">Solomon Islands</option>
-                  <option value="Somalia">Somalia</option>
-                  <option value="South Africa">South Africa</option>
-                  <option value="South Georgia">South Georgia</option>
-                  <option value="South Sudan">South Sudan</option>
-                  <option value="Spain">Spain</option>
-                  <option value="Sri Lanka">Sri Lanka</option>
-                  <option value="Sudan">Sudan</option>
-                  <option value="Suriname">Suriname</option>
-                  <option value="Svalbard And Jan Mayen Islands">
-                    Svalbard And Jan Mayen Islands
-                  </option>
-                  <option value="Swaziland">Swaziland</option>
-                  <option value="Sweden">Sweden</option>
-                  <option value="Switzerland">Switzerland</option>
-                  <option value="Syria">Syria</option>
-                  <option value="Taiwan">Taiwan</option>
-                  <option value="Tajikistan">Tajikistan</option>
-                  <option value="Tanzania">Tanzania</option>
-                  <option value="Thailand">Thailand</option>
-                  <option value="Togo">Togo</option>
-                  <option value="Tokelau">Tokelau</option>
-                  <option value="Tonga">Tonga</option>
-                  <option value="Trinidad And Tobago">
-                    Trinidad And Tobago
-                  </option>
-                  <option value="Tunisia">Tunisia</option>
-                  <option value="Turkey">Turkey</option>
-                  <option value="Turkmenistan">Turkmenistan</option>
-                  <option value="Turks And Caicos Islands">
-                    Turks And Caicos Islands
-                  </option>
-                  <option value="Tuvalu">Tuvalu</option>
-                  <option value="Uganda">Uganda</option>
-                  <option value="Ukraine">Ukraine</option>
-                  <option value="United Arab Emirates">
-                    United Arab Emirates
-                  </option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="United States">United States</option>
-                  <option value="United States Minor Outlying Islands">
-                    United States Minor Outlying Islands
-                  </option>
-                  <option value="Uruguay">Uruguay</option>
-                  <option value="Uzbekistan">Uzbekistan</option>
-                  <option value="Vanuatu">Vanuatu</option>
-                  <option value="Vatican City State (Holy See)">
-                    Vatican City State (Holy See)
-                  </option>
-                  <option value="Venezuela">Venezuela</option>
-                  <option value="Vietnam">Vietnam</option>
-                  <option value="Virgin Islands (British)">
-                    Virgin Islands (British)
-                  </option>
-                  <option value="Virgin Islands (US)">
-                    Virgin Islands (US)
-                  </option>
-                  <option value="Wallis And Futuna Islands">
-                    Wallis And Futuna Islands
-                  </option>
-                  <option value="Western Sahara">Western Sahara</option>
-                  <option value="Yemen">Yemen</option>
-                  <option value="Yugoslavia">Yugoslavia</option>
-                  <option value="Zambia">Zambia</option>
-                  <option value="Zimbabwe">Zimbabwe</option>
-                </select>
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="state">
-                  State <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="State"
-                  name="state"
-                  id="state"
-                  className="form-control"
-                  defaultValue="Uttar padesh"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="city">
-                  Town / City <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Town/City"
-                  name="city"
-                  id="city"
-                  className="form-control"
-                  defaultValue="Meerut"
-                  required=""
-                />
-              </div>
-              <div className="form-group col-xl-6">
-                <label htmlFor="pincode">
-                  Pincode <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Pincode"
-                  name="pincode"
-                  id="pincode"
-                  className="form-control"
-                  defaultValue={250003}
-                  required=""
-                />
-              </div>
-            </div>
-            {/* Buyer Info End */}
-          </div>
-          <div className="col-xl-5 checkout-billing">
-            {/* Order Details Start */}
-            <div className="sigma_notice mt-20" style={{ marginTop: 35 }}>
-              <p>
-                <a href="javascript:(void)">Ramayan Paath-रामायण पाठ </a>{" "}
-              </p>
-              <p>रामायण पाठ- Ramayan Paath</p>
-            </div>
-            <div className="sigma_notice-content">
+        {/* partial */}
+        {/* Checkout Start */}
+        <div className="section">
+          <div className="container">
+            <form onSubmit={handleSubmit}>
               <div className="row">
-                <div className="col-xl-12 form-group">
-                  <div className="sigma_icon-block icon-block-3">
-                    <div className="icon-wrapper">
-                      <i
-                        className="flaticon-temple"
-                        style={{ marginBottom: 5 }}
+                <div className="col-xl-12">
+                  <h4>Booking Details</h4>
+                </div>
+                <div className="col-xl-7">
+                  {/* Buyer Info Start */}
+                  <div className="row">
+                    <div className="form-group col-xl-12">
+                      <label htmlFor="puja_date">
+                        Select Puja Date <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="datetime-local"
+                        placeholder="Select Puaj Date"
+                        name="puja_date"
+                        id="puja_date"
+                        className="form-control"
+                        value={formData.puja_date}
+                        onChange={handleChange}
+                        required={true}
                       />
-                      <i className="far fa-calendar-check" />
                     </div>
-                    <div className="sigma_icon-block-content">
-                      <div className="sigma_product-single-content">
-                        <p>01-01-1970 To 01-01-1970</p>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="first_name">
+                        First Name <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="First Name"
+                        name="first_name"
+                        id="first_name"
+                        className="form-control"
+                        value={formData.first_name}
+                        onChange={handleChange}
+                        required={true}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="last_name">
+                        Last Name <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Last Name"
+                        name="last_name"
+                        id="last_name"
+                        className="form-control"
+                        value={formData.last_name}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="phone">
+                        Phone Number <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Phone Number"
+                        name="phone"
+                        id="phone"
+                        className="form-control"
+                        value={formData.phone}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="email">
+                        Email Address <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="Email Address"
+                        name="email"
+                        id="email"
+                        className="form-control"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="address_1">
+                        Street Address 1 <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Street Address One"
+                        name="address_1"
+                        id="address_1"
+                        className="form-control"
+                        value={formData.address_1}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="address_2">Street Address 2</label>
+                      <input
+                        type="text"
+                        placeholder="Street Address Two (Optional)"
+                        name="address_2"
+                        id="address_2"
+                        className="form-control"
+                        value={formData.address_2}
+                        onChange={handleChange}
+                      />
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="country">
+                        Country <span className="text-danger">*</span>
+                      </label>
+                      <select
+                        className="form-control"
+                        aria-label="Default select example"
+                        id="country"
+                        name="country"
+                        required
+                        onChange={handleCountryChange}
+                      >
+                        <option selected="">Select Country</option>
+                        {countries.map((country) => (
+                          <option key={country.id} value={country.id}>
+                            {country.country_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="state">
+                        State <span className="text-danger">*</span>
+                      </label>
+                      <select
+                        className="form-control"
+                        aria-label="Default select example"
+                        id="state"
+                        name="state"
+                        required
+                        onChange={handleStateChange}
+                      >
+                        <option selected="">Select State</option>
+                        {states.map((state) => (
+                          <option key={state.id} value={state.id}>
+                            {state.state_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="city">
+                        Town / City <span className="text-danger">*</span>
+                      </label>
+                      <select
+                        className="form-control"
+                        aria-label="Default select example"
+                        id="city"
+                        name="city"
+                        required
+                        onChange={handleChange}
+                      >
+                        <option selected="">Select City</option>
+                        {cities.map((city) => (
+                          <option key={city.id} value={city.id}>
+                            {city.city_name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group col-xl-6">
+                      <label htmlFor="pincode">
+                        Pincode <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Pincode"
+                        name="pincode"
+                        id="pincode"
+                        className="form-control"
+                        value={formData.pincode}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </div>
+                  {/* Buyer Info End */}
+                </div>
+                <div className="col-xl-5 checkout-billing">
+                  {/* Order Details Start */}
+                  {/* <div className="sigma_notice mt-20" style={{ marginTop: 35 }}>
+                    <p>
+                      <a href="#">{pujaData?.puja_title} </a>{" "}
+                    </p>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: pujaData?.puja_description,
+                      }}
+                    />
+                  </div> */}
+                  <div class="card mb-4">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <tbody>
+                            <tr>
+                              <td></td>
+                              <td>
+                                <h3 class="h5 mb-0">
+                                  <a href="#" class="text-reset">
+                                    {pujaData?.puja_title}
+                                  </a>
+                                </h3>
+                                <span class="small">
+                                  Package: {findPujaPackageById?.puja_packages_title_1}({findPujaPackageById?.puja_packages_title_2})
+                                </span>
+                              </td>
+                              <td class="text-end">₹{findPujaPackageById?.puja_packages_price}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">Discount </td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.coupon_code_discount : ' 00.00'}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">Subtotal </td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.sub_total : findPujaPackageById?.puja_packages_price}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">GST ({findPujaPackageById?.puja_packages_gst}%)</td>
+                              <td class="text-end">₹ {isCoupenApply ? formData?.gst_amount : findPujaPackageById?.puja_packages_gst_amount} </td>
+                            </tr>
+
+                            <tr class="fw-bold">
+                              <td colspan="2">TOTAL</td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount}</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   </div>
+                  <div className="sigma_notice-content">
+                    <div className="row">
+                      <div className="col-xl-12 form-group">
+                        <div className="sigma_icon-block icon-block-3">
+                          <div className="icon-wrapper">
+                            <i
+                              className="flaticon-temple"
+                              style={{ marginBottom: 5 }}
+                            />
+                            <i className="far fa-calendar-check" />
+                          </div>
+                          <div className="sigma_icon-block-content">
+                            <div className="sigma_product-single-content">
+                              <p>01-01-1970 To 01-01-1970</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="sigma_notice">
+                    <label>Coupon Code</label>
+                    <div className="coupon-input-wrapper">
+                      <input
+                        type="text"
+                        className="form-control coupon-input"
+                        name="coupon_code"
+                        value={formData?.coupon_code}
+                        onChange={handleChange}
+                        placeholder="Enter coupon code"
+                      />
+                      <button type="button" className="apply-button" onClick={handleApplyCoupon}>Apply</button>
+                    </div>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+                  </div>
+                  {/* Coupon Code */}
+                  <div className="sigma_notice">
+                    <label>Customer Notes</label>
+                    <textarea
+                      className="form-control"
+                      name="cutomer_notes"
+                      value={formData.cutomer_notes}
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <p className="small">
+                    Your personal data will be used to process your order,
+                    support your experience throughout this website, and for
+                    other purposes described in our{" "}
+                    <a
+                      className="btn-link"
+                      href="https://vaidikanushthanam.in/privacy-policy/"
+                      target="_blank"
+                    >
+                      privacy policy.
+                    </a>{" "}
+                  </p>{" "}
+                  <button
+                    type="submit"
+                    name="placeorder"
+                    className="sigma_btn-custom primary d-block w-100"
+                  >
+                    Place Order
+                  </button>
+                  {/* Order Details End */}
                 </div>
               </div>
-            </div>
-            {/* Coupon Code */}
-            <div className="sigma_notice">
-              <label>Customer Notes</label>
-              <textarea
-                className="form-control"
-                name="cutomer_notes"
-                defaultValue={""}
-              />
-            </div>
-            <p className="small">
-              Your personal data will be used to process your order, support
-              your experience throughout this website, and for other purposes
-              described in our{" "}
-              <a
-                className="btn-link"
-                href="https://vaidikanushthanam.in/privacy-policy/"
-                target="_blank"
-              >
-                privacy policy.
-              </a>{" "}
-            </p>
-            <Link href="/cart/Cart"> <button
-              type="submit"
-              name="placeorder"
-              className="sigma_btn-custom primary d-block w-100"
-            >
-              Place Order
-            </button></Link>
-            {/* <button
-              type="submit"
-              name="placeorder"
-              className="sigma_btn-custom primary d-block w-100"
-            >
-              Place Order
-            </button> */}
-            {/* Order Details End */}
+            </form>
+            <style
+              type="text/css"
+              dangerouslySetInnerHTML={{
+                __html:
+                  "\n  .form-group i {\n    position: unset !important;\n    top: 50%;\n    right: 20px;\n    transform: translateY(-50%);\n    color: #e8e8e8;\n}\n",
+              }}
+            />
           </div>
+          <ToastContainer />
         </div>
-      </form>
-      <style
-        type="text/css"
-        dangerouslySetInnerHTML={{
-          __html:
-            "\n  .form-group i {\n    position: unset !important;\n    top: 50%;\n    right: 20px;\n    transform: translateY(-50%);\n    color: #e8e8e8;\n}\n"
-        }}
-      />
+      </>
     </div>
-  </div>
-</>
-
-    </div>
-  )
+  );
 }

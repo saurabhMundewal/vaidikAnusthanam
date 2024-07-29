@@ -1,25 +1,40 @@
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../lib/axiosInstance'; 
-import HelpCenter from '../../atoms/helpCenter';
-import Link from 'next/link';
-import PoojaCard from '@/atoms/pujaCard';
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../lib/axiosInstance";
+import HelpCenter from "../../atoms/helpCenter";
+import Link from "next/link";
+import PoojaCard from "@/atoms/pujaCard";
+import Head from "next/head";
+import Pagination from "@/atoms/pagination";
 
 const PujaPage = () => {
   const router = useRouter();
   const { slug } = router.query;
   const [pujaData, setPujaData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(pujaData?.puja_data?.length / 9);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const indexOfLastItem = currentPage * 9;
+  const indexOfFirstItem = indexOfLastItem - 9;
+  const currentItems = pujaData?.puja_data?.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const fetchPuja = async (slug) => {
     try {
       const response = await axiosInstance.post(`/Pujas/pujaList/${slug}`);
-      if(response?.status === 202){
-        setPujaData([])
+      if (response?.status === 202) {
+        setPujaData([]);
       }
       setPujaData(JSON.parse(response?.data?.datas));
     } catch (error) {
-      setPujaData([])
-      console.error('Error fetching puja data:', error);
+      setPujaData([]);
+      console.error("Error fetching puja data:", error);
     }
   };
 
@@ -29,11 +44,22 @@ const PujaPage = () => {
     }
   }, [slug]);
 
-
-    return (
-      <div>
+  return (
+    <div>
       <>
         {/* partial */}
+        <Head>
+          <title>{pujaData?.puja_meta?.puja_metatitle}</title>
+          <meta
+            name="description"
+            content={"pujaData?.puja_meta?.puja_meta_description"}
+          />
+          <meta
+            name="keywords"
+            content={pujaData?.puja_meta?.puja_meta_keywords}
+          />
+          {/* Add more meta tags as needed */}
+        </Head>
         <div
           className="sigma_subheader dark-overlay dark-overlay-2"
           style={{ backgroundImage: "url(./../assets/img/subheader.jpg)" }}
@@ -42,8 +68,8 @@ const PujaPage = () => {
             <div className="sigma_subheader-inner">
               <div className="sigma_subheader-text">
                 <h1>
-                  Perform your puja as per Vedic rituals at Hindu pilgrimages and
-                  famous temples in India with Sri Mandir
+                  Perform your puja as per Vedic rituals at Hindu pilgrimages
+                  and famous temples in India with Sri Mandir
                 </h1>
               </div>
               <nav aria-label="breadcrumb">
@@ -54,7 +80,7 @@ const PujaPage = () => {
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    {slug?.replace(/-/g, ' ').toUpperCase()}
+                    {slug?.replace(/-/g, " ").toUpperCase()}
                   </li>
                 </ol>
               </nav>
@@ -65,51 +91,31 @@ const PujaPage = () => {
         <div className="section section-padding">
           <div className="container">
             <div>
-              <h2 className="title">Title Here</h2>
+              <h2 className="title">
+                {slug?.replace(/-/g, " ").toUpperCase()}
+              </h2>
               <p className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae
-                odio sem. Vivamus tristique vitae eros congue tempus. Quisque gravida
-                convallis dapibus. Donec sed tincidunt nisi. Phasellus id imperdiet
-                risus. Ut nulla erat, tincidunt vitae ipsum eu, euismod laoreet enim.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+                vitae odio sem. Vivamus tristique vitae eros congue tempus.
+                Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
+                Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae
+                ipsum eu, euismod laoreet enim.
               </p>
             </div>
             <div className="row row g-3">
-              {pujaData?.puja_data?.length ? pujaData?.puja_data?.map((puja, index) => (
-               <PoojaCard pooja={puja} />
-              )) : 'No Record Found'}
+              {pujaData?.puja_data?.length
+                ? currentItems?.map((puja, index) => <PoojaCard pooja={puja} />)
+                : "No Record Found"}
             </div>
-            {/* <ul className="pagination mb-0">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {" "}
-                  <i className="far fa-chevron-left" />{" "}
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item active">
-                <a className="page-link" href="#">
-                  2 <span className="sr-only">(current)</span>
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  {" "}
-                  <i className="far fa-chevron-right" />{" "}
-                </a>
-              </li>
-            </ul> */}
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
-      <HelpCenter />
+        <HelpCenter />
       </>
     </div>
   );
