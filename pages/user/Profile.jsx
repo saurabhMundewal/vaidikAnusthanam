@@ -14,16 +14,6 @@ export default function Profile() {
   const status = useSelector((state) => state.user.status);
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Clear session storage and cookies
-    sessionStorage.clear();
-    document.cookie.split(";").forEach((cookie) => {
-      document.cookie = cookie
-        .replace(/^ +/, "")
-        .replace(/=.*/, "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/");
-    });
-  };
-
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchUserProfile({ userid: userid }));
@@ -39,7 +29,7 @@ export default function Profile() {
   return (
     <div>
       <>
-        <UserHeader handleLogout={handleLogout} />
+        <UserHeader />
         {/* partial */}
         <div className="page-banner instructor-bg-blk">
           <div className="container">

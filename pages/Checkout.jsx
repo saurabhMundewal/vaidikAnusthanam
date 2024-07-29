@@ -1,7 +1,8 @@
 // updated code checkout new version
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import axios from "axios";
+import axiosInstance from "../lib/axiosInstance"
+import axios from "axios"
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,6 +22,11 @@ export default function Checkout() {
     (state) => state.location
   );
   const userid = Cookies.get("id");
+ // const packageing_id = getItemWithExpiration("package_id")
+  const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [packageingId, setPackageingId] = useState('');
+  const [isCoupenApply, setIsCoupenApply] = useState(false);
   const [pujaData, setPujaData] = useState(null);
   const [formData, setFormData] = useState({
     packages_id: "",
@@ -39,8 +45,25 @@ export default function Checkout() {
     state: "",
     city: "",
     pincode: "",
+    coupon_code: "",
+    coupon_code_expiry: "",
+    coupon_code_discount: 0,
+    sub_total: '',
+    gst_amount: '',
+    grand_total: '',
     cutomer_notes: "",
   });
+
+  useEffect(() => {
+    // Delay setting the state by 2 seconds (2000 milliseconds)
+    const timeout = setTimeout(() => {
+      const packageId = getItemWithExpiration("package_id");
+      setPackageingId(packageId);
+    }, 2000);
+
+    // Cleanup the timeout when the component unmounts
+    return () => clearTimeout(timeout);
+  }, []);
 
   useEffect(() => {
     const data = sessionStorage.getItem("selected_pooja");
@@ -48,7 +71,6 @@ export default function Checkout() {
       setPujaData(JSON.parse(data));
     }
   }, []);
-
 
   function getItemWithExpiration(key) {
     const itemStr = sessionStorage.getItem(key);
@@ -82,6 +104,43 @@ export default function Checkout() {
     dispatch(fetchStates(event.target.value));
   };
 
+  const handleApplyCoupon = async () => {
+    try {
+      const response = await axiosInstance.post('Pujas/couponcodeVerification', {
+        coupon_code: formData?.coupon_code,
+        member_id: userid,
+        puja_package_id: packageingId
+      });
+      if (response.data?.status === 200) {
+        const coupenData = JSON.parse(response?.data?.datas)
+        setIsCoupenApply(true)
+        setFormData({
+          ...formData,
+          'coupon_code': coupenData?.coupon_code,
+          'coupon_code_expiry': coupenData?.coupon_code_expiry,
+          'coupon_code_discount': coupenData?.coupon_discount_amount,
+          'sub_total': coupenData?.sub_total,
+          'gst_amount': coupenData?.gst_amount,
+          'grand_total': coupenData?.grand_total,
+        });
+        setSuccessMessage('Coupon applied successfully!');
+        setError('');
+      } else {
+        setIsCoupenApply(false)
+        setError('Invalid coupon code');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      setIsCoupenApply(false)
+      setSuccessMessage('');
+      setError('An error occurred while verifying the coupon code');
+    }
+  };
+
+  const findPujaPackageById =
+  packageingId && pujaData?.puja_packages?.find(packageDetails => packageDetails.puja_packages_id === packageingId);
+
+ 
   const handleStateChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -93,7 +152,7 @@ export default function Checkout() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (getItemWithExpiration("package_id") === null) {
       toast.error(
         "Session Expired, Please select package again and complete the checkout"
@@ -109,7 +168,7 @@ export default function Checkout() {
             puja_id: pujaData?.puja_id,
             puja_type: pujaData?.puja_slug,
             member_id: userid,
-            price: getItemWithExpiration("price"),
+            price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
             puja_date: formData?.puja_date,
             first_name: formData?.first_name,
             last_name: formData?.last_name,
@@ -124,17 +183,15 @@ export default function Checkout() {
             cutomer_notes: formData?.cutomer_notes,
           })
         ).unwrap(); // Use unwrap to get the direct payload from the action
-  
-        console.log(responseOrder?.id, "responseOrder");
-  
+
         if (responseOrder?.id) {
           const orderData = await axios.post("/api/razorpay-order", {
-            amount: getItemWithExpiration("price"),
+            amount: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
             currency: "INR",
           });
-  
+
           const { id: order_id, currency, amount } = orderData.data;
-  
+
           const options = {
             key: "rzp_test_npfutZLyZxi54o", // Enter the Key ID generated from the Dashboard
             amount,
@@ -152,18 +209,17 @@ export default function Checkout() {
                     member_id: userid,
                     payment_id: responseOrder?.id,
                     transection_id: response.razorpay_payment_id,
-                    payment_status: 'Success',
-                    price: getItemWithExpiration("price"),
-                    payment_mode: 'razorpay',
-                    coupon_code: 'abc',
-                    coupon_code_expiry: 'NA',
-                    coupon_code_discount: ''
+                    payment_status: "Success",
+                    price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                    payment_mode: "razorpay",
+                    coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                    coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                    coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
                   })
                 ).unwrap();
-                console.log(
-                  "Payment captured successfully:",
-                  captureResponse
-                );
+
+                router.push(`/user/myBookings`);
+
                 // Handle further actions on successful payment capture
               } catch (error) {
                 console.error("Error capturing payment:", error.message);
@@ -182,7 +238,7 @@ export default function Checkout() {
               color: "#3399cc",
             },
           };
-  
+
           const rzp1 = new Razorpay(options);
           rzp1.on("payment.failed", async function (response) {
             toast.error("Payment failed", response.error);
@@ -192,12 +248,12 @@ export default function Checkout() {
                   member_id: userid,
                   payment_id: responseOrder?.id,
                   transection_id: response.error.code, // Use response.error.code or appropriate field
-                  payment_status: 'Failure',
-                  price: getItemWithExpiration("price"),
-                  payment_mode: 'razorpay',
-                  coupon_code: 'abc',
-                  coupon_code_expiry: 'NA',
-                  coupon_code_discount: ''
+                  payment_status: "Failure",
+                  price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                  payment_mode: "razorpay",
+                  coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                  coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                  coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
                 })
               ).unwrap();
               console.error("Payment capture failed:", captureResponse);
@@ -206,7 +262,7 @@ export default function Checkout() {
               toast.error("Error capturing payment failure");
             }
           });
-  
+
           rzp1.open();
         } else {
           toast.error("Failed to submit booking form");
@@ -216,7 +272,6 @@ export default function Checkout() {
       }
     }
   };
-  
 
   useEffect(() => {
     dispatch(fetchCountries());
@@ -443,15 +498,56 @@ export default function Checkout() {
                 </div>
                 <div className="col-xl-5 checkout-billing">
                   {/* Order Details Start */}
-                  <div className="sigma_notice mt-20" style={{ marginTop: 35 }}>
+                  {/* <div className="sigma_notice mt-20" style={{ marginTop: 35 }}>
                     <p>
-                      <a href="javascript:(void)">{pujaData?.puja_title} </a>{" "}
+                      <a href="#">{pujaData?.puja_title} </a>{" "}
                     </p>
                     <div
                       dangerouslySetInnerHTML={{
                         __html: pujaData?.puja_description,
                       }}
                     />
+                  </div> */}
+                  <div class="card mb-4">
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table table-striped">
+                          <tbody>
+                            <tr>
+                              <td></td>
+                              <td>
+                                <h3 class="h5 mb-0">
+                                  <a href="#" class="text-reset">
+                                    {pujaData?.puja_title}
+                                  </a>
+                                </h3>
+                                <span class="small">
+                                  Package: {findPujaPackageById?.puja_packages_title_1}({findPujaPackageById?.puja_packages_title_2})
+                                </span>
+                              </td>
+                              <td class="text-end">₹{findPujaPackageById?.puja_packages_price}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">Discount </td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.coupon_code_discount : ' 00.00'}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">Subtotal </td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.sub_total : findPujaPackageById?.puja_packages_price}</td>
+                            </tr>
+                            <tr>
+                              <td colspan="2">GST ({findPujaPackageById?.puja_packages_gst}%)</td>
+                              <td class="text-end">₹ {isCoupenApply ? formData?.gst_amount : findPujaPackageById?.puja_packages_gst_amount} </td>
+                            </tr>
+
+                            <tr class="fw-bold">
+                              <td colspan="2">TOTAL</td>
+                              <td class="text-end">₹{isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
                   </div>
                   <div className="sigma_notice-content">
                     <div className="row">
@@ -472,6 +568,22 @@ export default function Checkout() {
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div className="sigma_notice">
+                    <label>Coupon Code</label>
+                    <div className="coupon-input-wrapper">
+                      <input
+                        type="text"
+                        className="form-control coupon-input"
+                        name="coupon_code"
+                        value={formData?.coupon_code}
+                        onChange={handleChange}
+                        placeholder="Enter coupon code"
+                      />
+                      <button type="button" className="apply-button" onClick={handleApplyCoupon}>Apply</button>
+                    </div>
+                    {error && <p style={{ color: 'red' }}>{error}</p>}
+                    {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
                   </div>
                   {/* Coupon Code */}
                   <div className="sigma_notice">

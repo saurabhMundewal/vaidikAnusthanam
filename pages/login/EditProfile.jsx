@@ -12,7 +12,7 @@ export default function EditProfile() {
           {/* Logo Start */}
           <div className="sigma_logo-wrapper">
             <a className="navbar-brand" href="index.html">
-              <img src="./../assets/img/logo.png" alt="logo" />
+              <img src="https://vaidikanushthanam.com/assets/img/logo.png" alt="logo" />
             </a>
           </div>
           {/* Logo End */}

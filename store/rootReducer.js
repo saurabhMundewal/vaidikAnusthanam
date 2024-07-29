@@ -20,6 +20,7 @@ import forgotPasswordReducer from '../features/forgotPasswordSlice';
 import userReducer from '../features/userSlice';
 import bookingReducer from '../features/checkoutSlice';
 import paymentReducer from '../features/paymentSlice';
+import orderReducer from '../features/orderSlice'
 // Import other reducers here...
 
 const rootReducer = combineReducers({
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
   forgotPassword: forgotPasswordReducer,
   user: userReducer,
   booking: bookingReducer,
-  payment:paymentReducer
+  payment:paymentReducer,
+  order: orderReducer,
   // Add other reducers here...
 });
 

@@ -44,7 +44,7 @@ const PujaPackageCard = ({ pujaPackage, handleCheckout }) => {
       </ul>
       <p>
         ₹<span className="plan-amount">{pujaPackage?.puja_packages_price}</span>{" "}
-        <span className="plan-duration">/year</span>
+        {/* <span className="plan-duration">/year</span> */}
       </p>
       <a onClick={() => handleCheckout(pujaPackage?.puja_packages_id, pujaPackage?.puja_packages_price)}>
         <button className="plan-choose"> Choose </button>

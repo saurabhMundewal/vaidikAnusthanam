@@ -103,7 +103,7 @@
     padding: 0;
   }
   .header-3 .sigma_logo-wrapper .navbar-brand{
-    width: 150px;
+    width: 70px;
   }
 
 }
@@ -806,7 +806,11 @@
 }
 
 @media (max-width: 575px) {
-
+  .sigma_banner-slide {
+    position: relative;
+    width: 100%;
+    margin-top: 70px;
+}
   blockquote{
     padding: 20px;
   }
