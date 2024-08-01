@@ -20,6 +20,7 @@ export default function HomePage(props) {
     homeContent,
   } = props;
 
+
   const handleClickFaq = (val) => {
     setIsOpen(val);
   };
@@ -65,14 +66,12 @@ export default function HomePage(props) {
   return (
     <>
       <Head>
-        <title>Home - Vaidik Anushthanam: Online & Offline Pujas</title>
+        <title>{props?.generalConfiguration?.site_name}</title>
         <meta
           name="description"
-          content={
-            "Learn about Vaidik Anushthanam, your trusted platform for authentic online and offline temple pujas. Experience divine blessings with us"
-          }
+          content={props?.generalConfiguration?.meta_content}
         />
-        <meta name="keywords" content="Vaidik Anushthanam | Home Page" />
+        <meta name="keywords" content={props?.generalConfiguration?.meta_title}/>
         {/* Add more meta tags as needed */}
       </Head>
       {/* Banner Start */}
@@ -149,7 +148,7 @@ export default function HomePage(props) {
                         key={categoryData?.data_id}
                       >
                         <Link
-                          href="#"
+                          href={categoryData?.how_we_can_page_link ||'#'  }
                           className="sigma_service style-1 primary-bg"
                         >
                           <div className="sigma_service-thumb">
@@ -237,8 +236,7 @@ export default function HomePage(props) {
                         className="col-lg-6 col-md-6"
                         key={categoryData?.data_id}
                       >
-                        <Link
-                          href={"categoryData?.features_page_link"}
+                        <div                         
                           className="sigma_service style-1"
                         >
                           <div className="sigma_service-thumb">
@@ -248,9 +246,9 @@ export default function HomePage(props) {
                             <h5> {categoryData?.features_title}</h5>
                             <p>{categoryData?.features_content}</p>
                           </div>
-                        </Link>
+                        </div>
                       </div>
-                    );
+                    )
                   }
                 )
               : null}
@@ -261,11 +259,11 @@ export default function HomePage(props) {
       {/* volunteers End */}
       <div
         className="section section-lg bg-cover bg-norepeat bg-center"
-        style={{ backgroundImage: "url(./../assets/img/bg1.jpg)" }}
+        style={{ backgroundImage: `url(${homeContent?.content?.video_banner})` }}
       >
         <div className="section d-flex align-items-center justify-content-center">
           <a
-            href={homeContent?.content?.video_banner}
+            href={`https://www.youtube.com/watch?v=${homeContent?.content?.video_id}`}
             className="sigma_video-popup popup-youtube"
             target="blank"
           >
@@ -294,8 +292,8 @@ export default function HomePage(props) {
                       className="col-lg-3 col-md-6"
                       key={categoryData?.data_id}
                     >
-                      <a
-                        href={categoryData?.features_page_link}
+                      <Link
+                        href={`/libraries/${categoryData?.slug}`}
                         className="sigma_service style-1"
                       >
                         <div className="sigma_service-thumb">
@@ -305,7 +303,7 @@ export default function HomePage(props) {
                           <h5>{categoryData?.title}</h5>
                           <p>{categoryData?.meta_description}</p>
                         </div>
-                      </a>
+                      </Link>
                     </div>
                   );
                 })

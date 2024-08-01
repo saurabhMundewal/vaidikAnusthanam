@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axiosInstance from "../lib/axiosInstance";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -32,10 +33,18 @@ export default function ContactForm() {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
     });
-      setResponseMessage("Form submitted successfully!");
+    if (response?.data?.status === 200) {
+      toast.success(response?.data?.message || "Form submitted successfully!");
+      }
+      if (response?.data?.status !== 200) {
+        toast.error(
+          response?.data?.message ||
+            "Please Enter the below field"
+        );
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
-      setResponseMessage("Error submitting form. Please try again.");
+      toast.error("Error submitting form. Please try again.", error);
     }
     
   };
@@ -61,6 +70,7 @@ export default function ContactForm() {
                       name="first_name"
                       value={formData.first_name}
                       onChange={handleChange}
+                      required={true}
                     />
                   </div>
                 </div>
@@ -89,6 +99,7 @@ export default function ContactForm() {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleChange}
+                      required={true}
                     />
                   </div>
                 </div>
@@ -103,6 +114,7 @@ export default function ContactForm() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
+                      required={true}
                     />
                   </div>
                 </div>
@@ -134,6 +146,7 @@ export default function ContactForm() {
                 )}
               </div>
             </form>
+            <ToastContainer />
           </div>
           <div className="col-lg-6">
             <div className="row">

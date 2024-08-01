@@ -33,7 +33,7 @@ export default function Blog() {
     <div className="container">
       <div className="sigma_subheader-inner">
         <div className="sigma_subheader-text">
-          <h1>Blog Grid</h1>
+          <h1>Blogs</h1>
         </div>
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
