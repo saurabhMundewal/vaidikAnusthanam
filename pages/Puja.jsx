@@ -31,7 +31,7 @@ const PujaPage = () => {
   useEffect(() => {
     dispatch(fetchPuja());
   }, []);
-
+  
   return (
     <div>
       <>

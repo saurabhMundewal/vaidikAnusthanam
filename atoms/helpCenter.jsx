@@ -1,7 +1,15 @@
-import React from 'react';
+import React,{useEffect, useState} from 'react';
 
-const HelpCenter = ({props }) => {
+const HelpCenter = () => {
+  const [generalConfiguration, setGeneralConfiguration] = useState(null);
 
+  useEffect(() => {
+    // Get the last watched video ID from local storage
+    const getMobile = localStorage.getItem('generalConfiguration');
+    const siteData = JSON.parse(getMobile)
+    setGeneralConfiguration(siteData);
+  }, []);
+  
   return (
     <div className="section section-padding">
     <div className="container">
@@ -21,7 +29,7 @@ const HelpCenter = ({props }) => {
               <span className="fw-600 custom-secondary">
                 Need Help, Call Our HOTLINE!
               </span>
-              <h4 className="text-white">+1 212-683-9756</h4>
+              <h4 className="text-white">{generalConfiguration?.primary_mobile}</h4>
             </div>
           </div>
         </div>

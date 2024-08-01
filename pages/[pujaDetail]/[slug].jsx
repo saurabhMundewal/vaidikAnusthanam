@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import Head from "next/head";
@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 export default function PujaDetailpage() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const packageRef = useRef(null);
   const { slug } = router.query;
   const profile = useSelector((state) => state.user.profile);
   const status = useSelector((state) => state.user.status);
@@ -31,6 +32,11 @@ export default function PujaDetailpage() {
 
   const handleClickTab = (val) => {
     setIsOpen(val);
+
+    // Scroll to the package section when tab 4 is clicked
+    if (val === 4 && packageRef.current) {
+      packageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   function setItemWithExpiration(key, value, minutes) {
@@ -49,7 +55,7 @@ export default function PujaDetailpage() {
         setItemWithExpiration("price", price, 50);       
         router.push("/Checkout");
       } else {
-        //router.push("/login/Login");
+        router.push("/login/Login");
       }
     },
     [userType, userid, dispatch, router]
@@ -145,6 +151,7 @@ export default function PujaDetailpage() {
                   <a
                     onClick={() => handleClickTab(4)}
                     className="sigma_btn-custom"
+                    ref={packageRef}
                   >
                     Select Package
                   </a>
@@ -248,9 +255,9 @@ export default function PujaDetailpage() {
                   </>
                 ) : isOpen === 4 ? (
                   <>
-                    <div>
-                      <div className="row">
-                        <h2>Select Puja Package</h2>
+                   <div className="tab-pane fade show active" ref={packageRef}>
+                    <h5>Packages</h5>
+                    <div className="row">
                         <div className="plan-options">
                           {pujaData?.puja_packages?.length &&
                             pujaData?.puja_packages?.map((pujaPackage) => {
@@ -327,166 +334,7 @@ export default function PujaDetailpage() {
               </div>
             </div>
           </div>
-          {/* <div className="section section-padding">
-      <div className="container">
-        <div>
-          <h2 className="title">Related Poojas</h2>
-          <p className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vitae
-            odio sem. Vivamus tristique vitae eros congue tempus. Quisque
-            gravida convallis dapibus. Donec sed tincidunt nisi. Phasellus id
-            imperdiet risus. Ut nulla erat, tincidunt vitae ipsum eu, euismod
-            laoreet enim.{" "}
-          </p>
-        </div>
-        <div className="row">
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="product-single.html">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> 
-                <a href="product-single.html" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="#">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> *
-                <a href="#" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="#">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> *
-                <a href="#" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="#">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> *
-                <a href="#" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="#">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> *
-                <a href="#" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-4 col-md-6">
-            <div className="sigma_service style-2">
-              <div className="sigma_service-thumb">
-                <img src="./../assets/img/donation/5.jpg" alt="img" />
-              </div>
-              <div className="sigma_service-body">
-                <h3>
-                  <a href="#">Title Here</a>
-                </h3>
-                {/* <div class="sigma_icon-block icon-block-3">
-            <div class="icon-wrapper">
-              <i class="flaticon-temple" style="margin-bottom: 5px;"></i><i class="far fa-calendar-check"></i>
-            </div>
-            <div class="sigma_icon-block-content">
-              <p style="margin-bottom: 5px;">Shri Gauri-Kedareshwar Temple, Kashi</p>
-              <p>28 January, Sunday, Magh Krishna Tritiya</p>
-            </div>
-          </div> *
-                <a href="#" className="sigma_btn-custom">
-                  Participate
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> */}
+          
         </div>
       </>
     </div>

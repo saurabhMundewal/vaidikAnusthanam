@@ -27,29 +27,36 @@ export default function Login() {
     setIsHydrated(true); // Hydration complete
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    try {
+      // Dispatch signup action and handle response
+      const response = await dispatch(login({ username, password }));
+      if (response?.payload?.status === 200) {
+        // Show error toast with the error message
+        toast.success("Login successful! Redirecting...");
+        setTimeout(() => {
+          router.push("/user/Profile");
+        }, 2000);
+      }
+
+      if (response?.payload?.status !== 200) {
+        // Show error toast with the error message
+        toast.error(
+          response.payload.message ||
+            "Login failed: either the username or password you are trying to log in with are incorrect"
+        );
+      }
+    } catch (error) {
+      // Show error toast if the request fails
+      toast.error("An error occurred. Please try again.");
+    }
   };
 
   const handleForgotPasswordSubmit = (e) => {
     e.preventDefault();
     dispatch(forgotPassword(email));
   };
-
-  useEffect(() => {
-    if (status === "succeeded") {
-      toast.success("Login successful! Redirecting...");
-      setTimeout(() => {
-        router.push("/user/Profile");
-      }, 2000);
-    }
-    if (status === "failed" && error) {
-      toast.error(
-        `Login failed: either the username or password you are trying to log in with are incorrect`
-      );
-    }
-  }, [status, error, router]);
 
   useEffect(() => {
     if (userType === "Priest" && userid !== "") {
@@ -119,10 +126,7 @@ export default function Login() {
                           />
                         </div>
                         <div className="pass-link">
-                          <a
-                            href="#"
-                            onClick={() => setIsForgotPassword(true)}
-                          >
+                          <a href="#" onClick={() => setIsForgotPassword(true)}>
                             Forgot password?
                           </a>
                         </div>

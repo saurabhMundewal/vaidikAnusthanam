@@ -7,9 +7,12 @@ import {
   fetchCities,
 } from "../../features/locationSlice";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 export default function Registration() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { countries, states, cities, loading } = useSelector(
     (state) => state.location
   );
@@ -34,26 +37,43 @@ export default function Registration() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirm_password) {
       alert("Passwords do not match.");
       return;
     } else {
-      // Submit form data
-      dispatch(
-        signup({
-          user_type: formData?.user_type,
-          name: formData?.name,
-          email: formData?.email,
-          mobile: formData?.mobile,
-          country: formData?.country,
-          state: formData?.state,
-          city: formData?.city,
-          password: formData?.password,
-          confirm_password: formData?.confirm_password,
-        })
-      );
+      try {
+        // Dispatch signup action and handle response
+        const response = await dispatch(
+          signup({
+            user_type: formData?.user_type,
+            name: formData?.name,
+            email: formData?.email,
+            mobile: formData?.mobile,
+            country: formData?.country,
+            state: formData?.state,
+            city: formData?.city,
+            password: formData?.password,
+            confirm_password: formData?.confirm_password,
+          })
+        );
+        if (response?.payload?.status === 200) {
+          // Show error toast with the error message
+          toast.success(response.payload.message || 'An error occurred.');
+          setTimeout(() => {
+            router.push("/login/Login");
+          }, 2000);
+        }
+
+        if (response?.payload?.status !== 200) {
+          // Show error toast with the error message
+          toast.error(response.payload.message || 'An error occurred.');
+        }
+      } catch (error) {
+        // Show error toast if the request fails
+        toast.error('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -252,6 +272,7 @@ export default function Registration() {
                           <Link href="/login/Login">Login now</Link>
                         </div>
                       </form>
+                      <ToastContainer />
                     </div>
                   </div>
                 </div>

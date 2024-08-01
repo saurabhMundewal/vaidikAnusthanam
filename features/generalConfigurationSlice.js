@@ -6,6 +6,7 @@ export const fetchGeneralConfiguration = createAsyncThunk(
   'generalConfiguration/fetchGeneralConfiguration',
   async () => {
     const response = await axiosInstance.post(`/Setting/GetGeneralConfiguration`);
+    localStorage.setItem('generalConfiguration', response?.data?.datas);
     return JSON.parse(response?.data?.datas);
   }
 );

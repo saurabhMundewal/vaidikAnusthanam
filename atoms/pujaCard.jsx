@@ -14,12 +14,12 @@ const PoojaCard = ({ pooja }) => {
         </div>
         <div className="sigma_service-body">
           <h3>
-            <Link href={`/pujaDetail/${pooja?.puja_slug}`}>
+            <Link href={`/${pooja?.puja_category_slug}/${pooja?.puja_slug}`}>
               {pooja?.puja_title}
             </Link>
           </h3>
           <Link
-            href={`/pujaDetail/${pooja?.puja_slug}`}
+            href={`/${pooja?.puja_category_slug}/${pooja?.puja_slug}`}
             className="sigma_btn-custom"
           >
             Participate

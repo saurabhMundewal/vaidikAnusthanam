@@ -809,7 +809,10 @@
   .sigma_banner-slide {
     position: relative;
     width: 100%;
-    margin-top: 70px;
+    margin-top:70px !important;
+   img {
+    height:300px;
+   }
 }
   blockquote{
     padding: 20px;

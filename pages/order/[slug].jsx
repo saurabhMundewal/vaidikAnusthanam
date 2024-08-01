@@ -116,6 +116,12 @@ export default function MyOrderStatus() {
                         </tr>
                         <tr>
                           <td colSpan="2">
+                           Dicount
+                          </td>
+                          <td className="text-end">{getGst}</td>
+                        </tr>
+                        <tr>
+                          <td colSpan="2">
                             GST ({orderDataDetails?.order_gst_tax}%)
                           </td>
                           <td className="text-end">{getGst}</td>
@@ -147,9 +153,9 @@ export default function MyOrderStatus() {
                         Total: ₹{" "}
                         {orderDataDetails?.order_packages_id?.package_price}
                         <span
-                          className={`badge rounded-pill ${orderDataDetails?.order_status?.current_status === "Pending" ? "bg-warning" : "bg-success"}`}
+                          className={`badge rounded-pill ${orderDataDetails?.order_payment_status === "Pending" ? "bg-warning" : "bg-success"}`}
                         >
-                          {orderDataDetails?.order_status?.current_status}
+                          {orderDataDetails?.order_payment_status}
                         </span>
                       </p>
                     </div>

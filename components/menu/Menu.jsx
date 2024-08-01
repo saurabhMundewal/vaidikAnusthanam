@@ -56,7 +56,7 @@ export default function Menu() {
               <Link href="/team">Our Team</Link>
             </li>
             <li className="menu-item">
-              <Link href="/Faq">Faq</Link>
+              <Link href="/faq">Faq</Link>
             </li>
           </ul>
         </li>
@@ -146,7 +146,7 @@ export default function Menu() {
           <Link href="/Blog">Blog</Link>
         </li>
         <li className="menu-item">
-          <Link href="#">Contact</Link>
+          <Link href="/contact-us">Contact</Link>
         </li>
         {menuType === "mobile" ? (
           <li>

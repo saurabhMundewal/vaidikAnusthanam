@@ -3,6 +3,13 @@ import Layout from "@/components/layouts/Layout";
 import { Provider } from "react-redux";
 import store from "../store";
 import "react-toastify/dist/ReactToastify.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'animate.css/animate.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import '@/public/assets/fonts/flaticon/flaticon.css'
+import '@/public/assets/css/style.css'
+import '@/public/assets/css/plugins/font-awesome.min.css'
+import '@/public/assets/css/responsive.css'
 import Head from "next/head";
 
 const DEFAULT_TITLE = "Default Page Title";
