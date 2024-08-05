@@ -1235,7 +1235,7 @@ h1 {
 }
 
 h2 {
-  font-size: 30px;
+  font-size: 44px;
 }
 
 h3 {
@@ -1623,7 +1623,7 @@ blockquote::before{
   font-size: 16px;
   text-transform: uppercase;
   color: #7E4555;
-  
+  font-weight: 700;
 }
 .section-title.text-start .subtitle{
     justify-content: flex-start;
@@ -2541,7 +2541,7 @@ table td {
 
 table th {
     font-weight: 500;
-    color: #db4242;
+    color: #fff;
     font-size: 15px;
     border: 1px solid #efefef;
     white-space: nowrap;
@@ -2620,7 +2620,7 @@ table img {
 .sigma_sm {
     display: flex;
     align-items: center;
-    margin-left: 2rem;
+    margin: 0;
 }
 
 .sigma_sm li {
@@ -3016,7 +3016,6 @@ table img {
   height: auto;
   border-radius: 0;
   border: 0;
-  padding: 5px 10px;
 }
 .sigma_header-controls.style-2 .aside-toggler span{
   margin-left: auto;
@@ -4527,10 +4526,12 @@ table img {
     align-items: center;
     justify-content: center;
 }
-.sigma_subheader .sigma_subheader-inner{
-  padding: 110px 0 40px !important;
+/* .header-absolute + .sigma_subheader .sigma_subheader-inner{
+  padding: 270px 0 150px !important;
 }
-
+.header-absolute + .sigma_subheader.subheader-lg .sigma_subheader-inner{
+  padding: 230px 0 340px !important;
+} */
 
 .sigma_subheader h1 {
     font-size: 30px;
@@ -4544,13 +4545,12 @@ table img {
 }
 
 .sigma_subheader .breadcrumb {
-
-    padding: 15px 15px;
+    padding: 20px 28px;
     margin: 0;
     background-color: #fff;
     justify-content: center;
     align-items: center;
-    border-radius: 10px;
+    border-radius: 50px;
     position: absolute;
     bottom: -32px;
     left: 50%;
@@ -8135,13 +8135,13 @@ td.remove {
 
 .slick-prev,
 .slick-next {
-    background-color: transparent;
+    background-color: #db4242;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 50px;
     height: 50px;
-    color: transparent;
+    color: #db4242;
     border-radius: 50%;
     transition: .3s;
     z-index: 9;
@@ -8165,7 +8165,7 @@ td.remove {
 
 .slick-prev:before,
 .slick-next:before {
-    color: transparent !important;
+    color: #ffffff;
     font-family: "Font Awesome 5 Pro";
     content: "\f054";
     -webkit-font-smoothing: antialiased;
@@ -10384,24 +10384,6 @@ article {
   opacity: 1;
 }
 
-.plan:first-child .plan-feature li:nth-child(n + 2):before {
-  /*   color: crimson; */
-  content: "✖";
-}
-
-/* .plan:nth-child(2) .plan-feature li:nth-child(3), .plan:nth-child(2) .plan-feature li:nth-child(4) {
-  opacity: 0.3;
-} */
-
-/* DRY */
-.plan:nth-child(2) .plan-feature li:nth-child(n + 3) {
-  opacity: 0.3;
-}
-
-.plan:nth-child(4) .plan-feature li {
-  opacity: 1;
-}
-
 .plan:nth-child(4) .plan-feature li:before {
   content: "✓";
 }
@@ -11338,7 +11320,10 @@ img.abs {
   height: 125px !important;
 }
 
-
+.benifit-image{
+  width: 60px;
+  height: 60px;
+}
 .display-block{
   display:block !important
 }

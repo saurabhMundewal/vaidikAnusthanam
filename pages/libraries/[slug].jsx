@@ -24,7 +24,9 @@ export default function Librarypage() {
   };
   const fetchLibraryCategory = async (slug) => {
     try {
-      const response = await axiosInstance.post(`/Library/LibraryCategory/${slug}`);
+      const response = await axiosInstance.post(
+        `/Library/LibraryCategory/${slug}`
+      );
       if (response?.status === 202) {
         setLibCategryData([]);
       }
@@ -42,11 +44,10 @@ export default function Librarypage() {
     }
   }, [slug]);
 
-
   return (
     <div>
       <>
-      <Head>
+        <Head>
           <title>{libData?.meta_data?.ibrary_metatitle}</title>
           <meta
             name="description"
@@ -83,13 +84,15 @@ export default function Librarypage() {
         <div className="section section-padding">
           <div className="container">
             <div className="img-container">
-            <img src={`${libCategoryData[0]?.lib_image_location}/${libCategoryData[0]?.lib_image}`} />
-                        </div>
+              <img
+                src={`${libCategoryData[0]?.lib_image_location}/${libCategoryData[0]?.lib_image}`}
+              />
+            </div>
             <div className="row product-grid">
-            {libData?.library_list?.map((data) => {
-                  return (
-              <div className="col-lg-4 col-sm-6 col-xs-12">
-                <div
+              {libData?.library_list?.map((data) => {
+                return (
+                  <div className="col-lg-4 col-sm-6 col-xs-12">
+                    <div
                       className="product-cart-wrap mb-30"
                       data-slick-index={5}
                       aria-hidden="false"
@@ -98,7 +101,7 @@ export default function Librarypage() {
                     >
                       <div className="product-img-action-wrap">
                         <div className="product-img product-img-zoom">
-                          <Link href={`libraryDetail/${data?.library_slug}`} >
+                          <Link href={`/libraryDetail/${data?.library_slug}`}>
                             <img
                               className="default-img"
                               src={data?.library_image}
@@ -111,23 +114,28 @@ export default function Librarypage() {
 
                       <div className="product-content-wrap-1">
                         <h2 className="product-heading">
-                        <Link href={`/libraryDetail/${data?.library_slug}`}>
-                        {data?.library_title}
+                          <Link href={`/libraryDetail/${data?.library_slug}`}>
+                            {data?.library_title}
                           </Link>
                         </h2>
                         <h4 className="product-heading-sub">
-                          {data?.library_description}
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: data?.library_description,
+                            }}
+                          />
                         </h4>
                       </div>
                     </div>
-              </div>)})}
-             
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
         {/* holi End */}
         {/* CTA Start */}
-       <HelpCenter />
+        <HelpCenter />
       </>
     </div>
   );

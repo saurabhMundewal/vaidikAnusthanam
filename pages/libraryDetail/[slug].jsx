@@ -115,7 +115,7 @@ export default function LibraryDetailpage() {
                         );
                       })}
 
-                    <div className="sigma_post-meta">
+                    {/* <div className="sigma_post-meta">
                       <a href="blog-details.html">
                         {" "}
                         <i className="far fa-eye" /> 232 Views
@@ -128,7 +128,7 @@ export default function LibraryDetailpage() {
                         {" "}
                         <i className="far fa-calendar" /> May 20, 2024
                       </a>
-                    </div>
+                    </div> */}
                   </div>
                   {/* Post Meta Start */}
                   {/* <div className="sigma_post-single-meta">
