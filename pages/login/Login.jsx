@@ -59,8 +59,8 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (userType === "Priest" && userid !== "") {
-      router.push("/user/Profile");
+    if (userType === "Devotees" && userid !== "") {
+      router.push("user/myBookings");
     }
   }, [userType, userid, router]);
 

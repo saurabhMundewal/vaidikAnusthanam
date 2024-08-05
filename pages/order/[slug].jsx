@@ -29,7 +29,7 @@ export default function MyOrderStatus() {
   }, [dispatch, slug]);
 
   useEffect(() => {
-    if (userType !== "Priest" && userid) {
+    if (userType !== "Devotees" && userid) {
       router.push("/");
     }
   }, [userType, userid]);

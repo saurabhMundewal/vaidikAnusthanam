@@ -40,7 +40,7 @@ export default function Footer() {
                     <Link href="/about">About Us</Link>{" "}
                   </li>
                   <li>
-                    <i className="fas fa-om" /> <Link href="/Puja">Puja</Link>{" "}
+                    <i className="fas fa-om" /> <Link href="/puja">Puja</Link>{" "}
                   </li>
                   {/* <li>
                     <i className="fas fa-om" />{" "}

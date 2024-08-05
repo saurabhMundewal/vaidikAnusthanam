@@ -21,7 +21,7 @@ export default function Profile() {
   }, [status, dispatch]);
 
   useEffect(() => {
-    if (userType !== "Priest" && userid !== "") {
+    if (userType !== "Devotees" && userid !== "") {
       router.push("/");
     }
   }, [userType, userid]);
