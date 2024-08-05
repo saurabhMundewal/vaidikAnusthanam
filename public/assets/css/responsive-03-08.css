@@ -286,7 +286,6 @@
 
   .me-lg-30 {
       margin-left: 0;
-      
   }
 
   .section {
@@ -810,13 +809,10 @@
   .sigma_banner-slide {
     position: relative;
     width: 100%;
-    margin-top: 70px !important;
-  
-    
-}
-.sigma_banner-slide img{
-  height: 300px;
-}
+    margin-top:70px !important;
+   img {
+    height:300px;
+   }
 }
   blockquote{
     padding: 20px;
@@ -1081,4 +1077,4 @@
     margin-bottom: 15px;
   }
 
-
+}

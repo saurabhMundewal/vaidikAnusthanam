@@ -38,9 +38,9 @@ export default function Blog() {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <a className="btn-link" href="/">
+              <Link className="btn-link" href="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               Blogs
@@ -165,7 +165,7 @@ export default function Blog() {
           <div className="row">
             {/* Article Start */}
             {posts && posts?.blogs?.map((post) => (
-            (<BlogCard blog={post} />)
+            (<BlogCard blog={post} key={post?.bloglist_data_id}/>)
              ))}
             {/* Article End */}         
           </div>

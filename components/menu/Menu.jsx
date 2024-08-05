@@ -1,15 +1,27 @@
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import {
+  fetchLibraryCategories,
+} from "../../features/librarySlice";
+import {fetchGeneralConfiguration} from "../../features/generalConfigurationSlice";
 
 export default function Menu() {
+  const dispatch = useDispatch();
   const userType = Cookies.get("user_type");
-  const userid = Cookies.get("id");
+  const userid = Cookies.get("id");  
+  const libraryCategory = useSelector((state) => state?.library?.categories);
   const [href, setHref] = useState("/login/Login");
   const [menuText, setMenuText] = useState("Login");
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const [isExpand, setIsExpand] = useState("");
   const [isExpandSubMenu, setIsExpandSubMenu] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchLibraryCategories());
+    dispatch(fetchGeneralConfiguration());
+  }, []);
 
   useEffect(() => {
     if (userType === "Priest" && userid !== "") {
@@ -62,7 +74,7 @@ export default function Menu() {
         </li>
         <li className="menu-item menu-item-has-children">
           <a href="#" onClick={() => handleExpandSub(menuType, "Poojas")}>
-            Poojas
+          Pujas
           </a>
           <ul
             className={
@@ -70,14 +82,14 @@ export default function Menu() {
             }
           >
             <li className="menu-item">
-              <Link href="/puja/online-puja">Online Pooja</Link>
+              <Link href="/puja/online-puja">Online Puja</Link>
             </li>
             <li className="menu-item menu-item-has-children">
               <a
                 href="#"
                 onClick={() => handleExpandSubMenu(menuType, "offline-pooja")}
               >
-                Offline Pooja
+                Offline Puja
               </a>
               <ul
                 className={
@@ -94,9 +106,9 @@ export default function Menu() {
                 </li>
               </ul>
             </li>
-            <li className="menu-item">
+            {/* <li className="menu-item">
               <Link href="/exclusivepackages">Exclusive Packages</Link>
-            </li>
+            </li> */}
           </ul>
         </li>
         <li className="menu-item menu-item-has-children">
@@ -108,21 +120,14 @@ export default function Menu() {
               isExpand === "Libarary" ? "display-block sub-menu" : "sub-menu"
             }
           >
-            <li className="menu-item">
-              {" "}
-              <Link href="/libraries/satsang-sahitya">
-                Satsang Sahitya
-              </Link>{" "}
-            </li>
-            <li className="menu-item">
-              <Link href="/libraries/aarti">Aarti</Link>
-            </li>
-            <li className="menu-item">
-              <Link href="/libraries/chalisa">Chalisa</Link>
-            </li>
-            <li className="menu-item">
-              <Link href="/libraries/mantra">Mantra</Link>
-            </li>
+            {libraryCategory?.length && libraryCategory?.map((category) =>{
+              return (  <li className="menu-item" key={category?.data_id}>
+                <Link href={`/libraries/${category?.slug}`}>
+                 {category?.title}
+                </Link>
+              </li>)
+            })}         
+            
           </ul>
         </li>
         <li className="menu-item menu-item-has-children">

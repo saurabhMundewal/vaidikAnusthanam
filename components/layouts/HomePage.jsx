@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import MainSlider from "../../atoms/mainSlider";
 import PoojaCard from "@/atoms/pujaCard";
 import Link from "next/link";
@@ -24,6 +22,7 @@ export default function HomePage(props) {
   const handleClickFaq = (val) => {
     setIsOpen(val);
   };
+  const homeHeadingData = homeContent?.content?.home_setting_content
 
   // this slider updated testimonials today
   const test_settings = {
@@ -184,13 +183,9 @@ export default function HomePage(props) {
       <div className="section section-padding pt-0" style={{ marginTop: 20 }}>
         <div className="container">
           <div className="section-title text-center">
-            <h2 className="title">हमारे अनुष्ठान</h2>
+            <h2 className="title">{homeHeadingData?.home_setting_puaj_title}</h2>
             <p className="subtitle">
-              भाव के लिए भव्यता की आवश्यकता नही होती, किन्तु अगर भव्यता से वो
-              भाव उत्पन्न हो जो सौम्यता के साथ, समस्त परिवार में समृद्धि लाये,
-              तो इस भौतिक आयाम में उस से सर्वोपरि कुछ नहीं। वैदिक रस में सराबोर
-              हमारे अनुष्ठान, आपको सदैव आपके आध्यात्मिक उत्थान के लिए
-              प्रोत्साहित करते हैं।
+              {homeHeadingData?.home_setting_description2}
             </p>
             <li>
               <Link className="sigma_btn-custom-1" href="/Puja">
@@ -214,13 +209,9 @@ export default function HomePage(props) {
       >
         <div className="container">
           <div className="section-title text-center">
-            <h2 className="title text-white">Title Here</h2>
+            <h2 className="title text-white">{homeHeadingData?.home_setting_features_title}</h2>
             <p className="subtitle text-white">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vitae odio sem. Vivamus tristique vitae eros congue tempus.
-              Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae ipsum
-              eu, euismod laoreet enim.{" "}
+            {homeHeadingData?.home_setting_description3}
             </p>
             {/* <a href="" className="sigma_btn-custom-1">
         View Detailed Panchang
@@ -274,13 +265,9 @@ export default function HomePage(props) {
       <div className="section section-padding pt-0 light-bg">
         <div className="container">
           <div className="section-title text-center">
-            <h2 className="title">Title Here</h2>
+            <h2 className="title">{homeHeadingData?.home_setting_library_title}</h2>
             <p className="subtitle">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vitae odio sem. Vivamus tristique vitae eros congue tempus.
-              Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-              Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae ipsum
-              eu, euismod laoreet enim.{" "}
+            {homeHeadingData?.home_setting_description4}
             </p>
           </div>
           <div className="row g-3">
@@ -393,8 +380,8 @@ export default function HomePage(props) {
           }}
         >
           <div className="section-title text-center">
-            <p className="subtitle">Testimonials</p>
-            <h4 className="title">What Our Congregation Say</h4>
+            <p className="subtitle">{homeHeadingData?.home_setting_testimonial_title}</p>
+            <h4 className="title">{homeHeadingData?.home_setting_description5}</h4>
           </div>
           <div className="sigma_testimonial style-2">
             <div className="sigma_testimonial-slider">
@@ -412,11 +399,41 @@ export default function HomePage(props) {
                       <div className="sigma_testimonial-body">
                         <div className="sigma_rating-wrapper">
                           <div className="sigma_rating">
-                            <i className="fas fa-star active" />
-                            <i className="fas fa-star active" />
-                            <i className="fas fa-star active" />
-                            <i className="fas fa-star active" />
-                            <i className="far fa-star active" />
+                          <i
+            className={
+              testimonial?.test_star_rating >= 1
+                ? `fa fa-star active`
+                : `fa fa-star`
+            }
+          />
+          <i
+            className={
+              testimonial?.test_star_rating >= 2
+                ? `fa fa-star active`
+                : `fa fa-star`
+            }
+          />
+          <i
+            className={
+              testimonial?.test_star_rating >= 3
+                ? `fa fa-star active`
+                : `fa fa-star`
+            }
+          />
+          <i
+            className={
+              testimonial?.test_star_rating >= 4
+                ? `fa fa-star active`
+                : `fa fa-star`
+            }
+          />
+          <i
+            className={
+              testimonial?.test_star_rating >= 5
+                ? `fa fa-star active`
+                : `fa fa-star`
+            }
+          />
                           </div>
                         </div>
                         <div

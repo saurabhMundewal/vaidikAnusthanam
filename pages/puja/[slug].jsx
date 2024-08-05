@@ -68,8 +68,7 @@ const PujaPage = () => {
             <div className="sigma_subheader-inner">
               <div className="sigma_subheader-text">
                 <h1>
-                  Perform your puja as per Vedic rituals at Hindu pilgrimages
-                  and famous temples in India with Sri Mandir
+                  {pujaData?.puja_meta?.data_banner_heading}
                 </h1>
               </div>
               <nav aria-label="breadcrumb">
@@ -92,14 +91,15 @@ const PujaPage = () => {
           <div className="container">
             <div>
               <h2 className="title">
-                {slug?.replace(/-/g, " ").toUpperCase()}
+               {pujaData?.puja_meta?.data_title}
               </h2>
               <p className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                vitae odio sem. Vivamus tristique vitae eros congue tempus.
-                Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-                Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae
-                ipsum eu, euismod laoreet enim.
+              <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                          pujaData?.puja_meta?.data_content,
+                        }}
+                      />
               </p>
             </div>
             <div className="row row g-3">
