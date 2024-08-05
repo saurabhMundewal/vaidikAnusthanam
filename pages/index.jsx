@@ -19,14 +19,11 @@ export default function () {
   const generalConfiguration = useSelector(
     (state) => state.generalConfiguration.data
   );
-  const generalConfigurationStatus = useSelector(
-    (state) => state.generalConfiguration.status
-  );
+
   const faq = useSelector((state) => state.faq.data);
   const pooja = useSelector((state) => state?.pooja?.puja);
   const posts = useSelector((state) => state.blog.posts);
   const content = useSelector((state) => state.homeTheme);
-  const libraryCategory = useSelector((state) => state?.library);
   const { categories, categoryDetails, loading, error } = useSelector(
     (state) => state.library
   );
@@ -43,6 +40,9 @@ export default function () {
   }, []);
 
   return (
+    <>
+    {status &&   <div>Loading...</div>}
+  
     <HomePage
       getHomePageDetails={getHomePageDetails}
       generalConfiguration={generalConfiguration}
@@ -52,5 +52,6 @@ export default function () {
       poojaData={pooja}
       homeContent={content}
     ></HomePage>
+      </>
   );
 }

@@ -50,7 +50,7 @@ export default function PujaDetailpage() {
 
   const handleCheckout = useCallback(
     (package_id, price) => {      
-      if (userType === "Priest" && userid !== "") {
+      if (userType === "Devotees" && userid !== "") {
         setItemWithExpiration("package_id", package_id, 50);       
         setItemWithExpiration("price", price, 50);       
         router.push("/Checkout");

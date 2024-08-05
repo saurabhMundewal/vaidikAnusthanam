@@ -188,7 +188,7 @@ export default function HomePage(props) {
               {homeHeadingData?.home_setting_description2}
             </p>
             <li>
-              <Link className="sigma_btn-custom-1" href="/Puja">
+              <Link className="sigma_btn-custom-1" href="/puja">
                 View All Puja
               </Link>
             </li>

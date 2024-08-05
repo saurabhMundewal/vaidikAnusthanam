@@ -40,7 +40,7 @@ const UserHeader = () => {
           <Link href="/user/Profile">My Profile</Link>
         </li>
         <li className="menu-item">
-          <Link href="/Puja">Book New Puja</Link>
+          <Link href="/puja">Book New Puja</Link>
         </li>
         <li className="menu-item">
           <a href="#" onClick={handleLogout}>

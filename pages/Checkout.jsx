@@ -13,6 +13,7 @@ import {
 } from "../features/locationSlice";
 import { submitBookingForm } from "../features/checkoutSlice";
 import { submitBookingPayment } from "../features/paymentSlice";
+import { fetchUserProfile } from "../features/userSlice";
 import Cookies from "js-cookie";
 
 export default function Checkout() {
@@ -23,6 +24,9 @@ export default function Checkout() {
   );
   const userid = Cookies.get("id");
  // const packageing_id = getItemWithExpiration("package_id")
+ const profile = useSelector((state) => state.user.profile);
+ const status = useSelector((state) => state.user.status);
+ const [minDateTime, setMinDateTime] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [packageingId, setPackageingId] = useState('');
@@ -35,15 +39,15 @@ export default function Checkout() {
     member_id: "",
     price: "",
     puja_date: "",
-    first_name: "",
+    first_name: profile?.user_name,
     last_name: "",
-    phone: "",
-    email: "",
+    phone: profile?.mobile,
+    email: profile?.email,
     address_1: "",
     address_2: "",
-    country: "",
-    state: "",
-    city: "",
+    country: '',
+    state:'',
+    city: '',
     pincode: "",
     coupon_code: "",
     coupon_code_expiry: "",
@@ -53,6 +57,226 @@ export default function Checkout() {
     grand_total: '',
     cutomer_notes: "",
   });
+
+
+function getItemWithExpiration(key) {
+  const itemStr = sessionStorage.getItem(key);
+  if (!itemStr) return null;
+
+  const item = JSON.parse(itemStr);
+  const now = new Date().getTime();
+
+  if (now > item.expiration) {
+    sessionStorage.removeItem(key);
+    return null;
+  }
+
+  return item.value;
+}
+
+const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+};
+
+const handleCountryChange = (event) => {
+  const { name, value } = event.target;
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+  dispatch(fetchStates(event.target.value));
+};
+
+const handleApplyCoupon = async () => {
+  try {
+    const response = await axiosInstance.post('Pujas/couponcodeVerification', {
+      coupon_code: formData?.coupon_code,
+      member_id: userid,
+      puja_package_id: packageingId
+    });
+    if (response.data?.status === 200) {
+      const coupenData = JSON.parse(response?.data?.datas)
+      setIsCoupenApply(true)
+      setFormData({
+        ...formData,
+        'coupon_code': coupenData?.coupon_code,
+        'coupon_code_expiry': coupenData?.coupon_code_expiry,
+        'coupon_code_discount': coupenData?.coupon_discount_amount,
+        'sub_total': coupenData?.sub_total,
+        'gst_amount': coupenData?.gst_amount,
+        'grand_total': coupenData?.grand_total,
+      });
+      setSuccessMessage('Coupon applied successfully!');
+      setError('');
+    } else {
+      setIsCoupenApply(false)
+      setError('Invalid coupon code');
+      setSuccessMessage('');
+    }
+  } catch (error) {
+    setIsCoupenApply(false)
+    setSuccessMessage('');
+    setError('An error occurred while verifying the coupon code');
+  }
+};
+
+const findPujaPackageById =
+packageingId && pujaData?.puja_packages?.find(packageDetails => packageDetails.puja_packages_id === packageingId);
+
+
+const handleStateChange = (event) => {
+  const { name, value } = event.target;
+  setFormData({
+    ...formData,
+    [name]: value,
+  });
+  dispatch(fetchCities(event.target.value));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (getItemWithExpiration("package_id") === null) {
+    toast.error(
+      "Session Expired, Please select package again and complete the checkout"
+    );
+    setTimeout(() => {
+      router.push(`/pujaDetail/${pujaData?.puja_slug}`);
+    }, 2000);
+  } else {
+    try {
+      const responseOrder = await dispatch(
+        submitBookingForm({
+          packages_id: getItemWithExpiration("package_id"),
+          puja_id: pujaData?.puja_id,
+          puja_type: pujaData?.puja_slug,
+          member_id: userid,
+          price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+          puja_date: formData?.puja_date,
+          first_name: formData?.first_name,
+          last_name: formData?.last_name,
+          phone: formData?.phone,
+          email: formData?.email,
+          address_1: formData?.address_1,
+          address_2: formData?.address_2,
+          country: formData?.country,
+          state: formData?.state,
+          city: formData?.city,
+          pincode: formData?.pincode,
+          cutomer_notes: formData?.cutomer_notes,
+        })
+      ).unwrap(); // Use unwrap to get the direct payload from the action
+
+      if (responseOrder?.id) {
+        const orderData = await axios.post("/api/razorpay-order", {
+          amount: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+          currency: "INR",
+        });
+
+        const { id: order_id, currency, amount } = orderData.data;
+
+        const options = {
+          key: "rzp_test_npfutZLyZxi54o", // Enter the Key ID generated from the Dashboard
+          amount,
+          currency,
+          name: "vaidikanushthanam",
+          description: "Test Transaction",
+          image: "https://vaidikanushthanam.com/assets/img/logo.png",
+          order_id, // This is a sample Order ID. Pass the `id` obtained in Step 1
+          handler: async function (response) {
+            // Handle successful payment capture
+            toast.success("Payment captured successfully", response);
+            try {
+              const captureResponse = await dispatch(
+                submitBookingPayment({
+                  member_id: userid,
+                  payment_id: responseOrder?.id,
+                  transection_id: response.razorpay_payment_id,
+                  payment_status: "Success",
+                  price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                  payment_mode: "razorpay",
+                  coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                  coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                  coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
+                })
+              ).unwrap();
+
+              router.push(`/user/myBookings`);
+
+              // Handle further actions on successful payment capture
+            } catch (error) {
+              console.error("Error capturing payment:", error.message);
+              toast.error("Payment capture failed");
+            }
+          },
+          prefill: {
+            name: `${formData.first_name} ${formData.last_name}`,
+            email: formData.email,
+            contact: formData.phone,
+          },
+          notes: {
+            address: `${formData.address_1} ${formData.address_2}`,
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.on("payment.failed", async function (response) {
+          toast.error("Payment failed", response.error);
+          try {
+            const captureResponse = await dispatch(
+              submitBookingPayment({
+                member_id: userid,
+                payment_id: responseOrder?.id,
+                transection_id: response.error.code, // Use response.error.code or appropriate field
+                payment_status: "Failure",
+                price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
+                payment_mode: "razorpay",
+                coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
+                coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
+                coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
+              })
+            ).unwrap();
+            console.error("Payment capture failed:", captureResponse);
+          } catch (error) {
+            console.error("Error capturing payment failure:", error.message);
+            toast.error("Error capturing payment failure");
+          }
+        });
+
+        rzp1.open();
+      } else {
+        toast.error("Failed to submit booking form");
+      }
+    } catch (error) {
+      toast.error("An error occurred: " + error.message);
+    }
+  }
+};
+
+useEffect(() => {
+  if(profile){
+  setFormData({
+    ...formData,
+    first_name: profile?.user_name,
+    phone: profile?.mobile,
+    email: profile?.email
+  });
+}
+ 
+}, [profile]);
+
+useEffect(() => {
+  if (status === "idle") {
+    dispatch(fetchUserProfile({ userid: userid }));
+  }
+}, [status, dispatch]);
 
   useEffect(() => {
     // Delay setting the state by 2 seconds (2000 milliseconds)
@@ -72,206 +296,21 @@ export default function Checkout() {
     }
   }, []);
 
-  function getItemWithExpiration(key) {
-    const itemStr = sessionStorage.getItem(key);
-    if (!itemStr) return null;
 
-    const item = JSON.parse(itemStr);
-    const now = new Date().getTime();
+  useEffect(() => {
+    const getCurrentDateTimeLocal = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
 
-    if (now > item.expiration) {
-      sessionStorage.removeItem(key);
-      return null;
-    }
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    };
 
-    return item.value;
-  }
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleCountryChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    dispatch(fetchStates(event.target.value));
-  };
-
-  const handleApplyCoupon = async () => {
-    try {
-      const response = await axiosInstance.post('Pujas/couponcodeVerification', {
-        coupon_code: formData?.coupon_code,
-        member_id: userid,
-        puja_package_id: packageingId
-      });
-      if (response.data?.status === 200) {
-        const coupenData = JSON.parse(response?.data?.datas)
-        setIsCoupenApply(true)
-        setFormData({
-          ...formData,
-          'coupon_code': coupenData?.coupon_code,
-          'coupon_code_expiry': coupenData?.coupon_code_expiry,
-          'coupon_code_discount': coupenData?.coupon_discount_amount,
-          'sub_total': coupenData?.sub_total,
-          'gst_amount': coupenData?.gst_amount,
-          'grand_total': coupenData?.grand_total,
-        });
-        setSuccessMessage('Coupon applied successfully!');
-        setError('');
-      } else {
-        setIsCoupenApply(false)
-        setError('Invalid coupon code');
-        setSuccessMessage('');
-      }
-    } catch (error) {
-      setIsCoupenApply(false)
-      setSuccessMessage('');
-      setError('An error occurred while verifying the coupon code');
-    }
-  };
-
-  const findPujaPackageById =
-  packageingId && pujaData?.puja_packages?.find(packageDetails => packageDetails.puja_packages_id === packageingId);
-
- 
-  const handleStateChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-    dispatch(fetchCities(event.target.value));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (getItemWithExpiration("package_id") === null) {
-      toast.error(
-        "Session Expired, Please select package again and complete the checkout"
-      );
-      setTimeout(() => {
-        router.push(`/pujaDetail/${pujaData?.puja_slug}`);
-      }, 2000);
-    } else {
-      try {
-        const responseOrder = await dispatch(
-          submitBookingForm({
-            packages_id: getItemWithExpiration("package_id"),
-            puja_id: pujaData?.puja_id,
-            puja_type: pujaData?.puja_slug,
-            member_id: userid,
-            price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
-            puja_date: formData?.puja_date,
-            first_name: formData?.first_name,
-            last_name: formData?.last_name,
-            phone: formData?.phone,
-            email: formData?.email,
-            address_1: formData?.address_1,
-            address_2: formData?.address_2,
-            country: formData?.country,
-            state: formData?.state,
-            city: formData?.city,
-            pincode: formData?.pincode,
-            cutomer_notes: formData?.cutomer_notes,
-          })
-        ).unwrap(); // Use unwrap to get the direct payload from the action
-
-        if (responseOrder?.id) {
-          const orderData = await axios.post("/api/razorpay-order", {
-            amount: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
-            currency: "INR",
-          });
-
-          const { id: order_id, currency, amount } = orderData.data;
-
-          const options = {
-            key: "rzp_test_npfutZLyZxi54o", // Enter the Key ID generated from the Dashboard
-            amount,
-            currency,
-            name: "vaidikanushthanam",
-            description: "Test Transaction",
-            image: "https://vaidikanushthanam.com/assets/img/logo.png",
-            order_id, // This is a sample Order ID. Pass the `id` obtained in Step 1
-            handler: async function (response) {
-              // Handle successful payment capture
-              toast.success("Payment captured successfully", response);
-              try {
-                const captureResponse = await dispatch(
-                  submitBookingPayment({
-                    member_id: userid,
-                    payment_id: responseOrder?.id,
-                    transection_id: response.razorpay_payment_id,
-                    payment_status: "Success",
-                    price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
-                    payment_mode: "razorpay",
-                    coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
-                    coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
-                    coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
-                  })
-                ).unwrap();
-
-                router.push(`/user/myBookings`);
-
-                // Handle further actions on successful payment capture
-              } catch (error) {
-                console.error("Error capturing payment:", error.message);
-                toast.error("Payment capture failed");
-              }
-            },
-            prefill: {
-              name: `${formData.first_name} ${formData.last_name}`,
-              email: formData.email,
-              contact: formData.phone,
-            },
-            notes: {
-              address: `${formData.address_1} ${formData.address_2}`,
-            },
-            theme: {
-              color: "#3399cc",
-            },
-          };
-
-          const rzp1 = new Razorpay(options);
-          rzp1.on("payment.failed", async function (response) {
-            toast.error("Payment failed", response.error);
-            try {
-              const captureResponse = await dispatch(
-                submitBookingPayment({
-                  member_id: userid,
-                  payment_id: responseOrder?.id,
-                  transection_id: response.error.code, // Use response.error.code or appropriate field
-                  payment_status: "Failure",
-                  price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
-                  payment_mode: "razorpay",
-                  coupon_code: isCoupenApply ? formData?.coupon_code : 'NA',
-                  coupon_code_expiry: isCoupenApply ? formData?.coupon_code_expiry : 'NA',
-                  coupon_code_discount: isCoupenApply ? formData?.coupon_code_discount : 'NA',
-                })
-              ).unwrap();
-              console.error("Payment capture failed:", captureResponse);
-            } catch (error) {
-              console.error("Error capturing payment failure:", error.message);
-              toast.error("Error capturing payment failure");
-            }
-          });
-
-          rzp1.open();
-        } else {
-          toast.error("Failed to submit booking form");
-        }
-      } catch (error) {
-        toast.error("An error occurred: " + error.message);
-      }
-    }
-  };
+    setMinDateTime(getCurrentDateTimeLocal());
+  }, []);
 
   useEffect(() => {
     dispatch(fetchCountries());
@@ -330,6 +369,7 @@ export default function Checkout() {
                         placeholder="Select Puaj Date"
                         name="puja_date"
                         id="puja_date"
+                        min={minDateTime}
                         className="form-control"
                         value={formData.puja_date}
                         onChange={handleChange}
@@ -375,7 +415,7 @@ export default function Checkout() {
                         name="phone"
                         id="phone"
                         className="form-control"
-                        value={formData.phone}
+                        value={formData.phone }
                         onChange={handleChange}
                       />
                     </div>
@@ -389,7 +429,7 @@ export default function Checkout() {
                         name="email"
                         id="email"
                         className="form-control"
-                        value={formData.email}
+                        value={formData.email }
                         onChange={handleChange}
                       />
                     </div>

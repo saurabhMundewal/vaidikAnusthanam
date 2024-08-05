@@ -12,6 +12,9 @@ export default function Menu() {
   const userType = Cookies.get("user_type");
   const userid = Cookies.get("id");  
   const libraryCategory = useSelector((state) => state?.library?.categories);
+  const generalConfiguration = useSelector(
+    (state) => state.generalConfiguration.data
+  );
   const [href, setHref] = useState("/login/Login");
   const [menuText, setMenuText] = useState("Login");
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -24,7 +27,7 @@ export default function Menu() {
   }, []);
 
   useEffect(() => {
-    if (userType === "Priest" && userid !== "") {
+    if (userType === "Devotees" && userid !== "") {
       setHref("/user/Profile");
       setMenuText("Dashboard");
     }
@@ -172,7 +175,7 @@ export default function Menu() {
         <aside className="sigma_aside sigma_aside-right sigma_aside-right-panel sigma_aside-bg">
           <div className="sidebar">
             <div className="sidebar-widget widget-logo">
-              <img src="https://vaidikanushthanam.com/assets/img/logo.png" className="mb-30" alt="img" />
+              <img src={generalConfiguration?.profile_img} className="mb-30" alt="img" />
               <p>
                 Curabitur non nulla sit amet nisl tempus convallis quis ac
                 lectus. Donec rutrum congue leo eget malesuada. Praesent sapien
@@ -255,7 +258,7 @@ export default function Menu() {
         >
           <Link className="navbar-brand" href="/">
             {" "}
-            <img src="https://vaidikanushthanam.com/assets/img/logo.png" alt="logo" />{" "}
+            <img src={generalConfiguration?.profile_img} alt="logo" />{" "}
           </Link>
           {/* Menu */}
           <ul>{menuItem("mobile")}</ul>
@@ -274,7 +277,7 @@ export default function Menu() {
                 {/* Logo Start */}
                 <div className="sigma_logo-wrapper">
                   <a className="navbar-brand" href="/">
-                    <img src="https://vaidikanushthanam.com/assets/img/logo.png" alt="logo" />
+                    <img src={generalConfiguration?.profile_img} alt="logo" />
                   </a>
                 </div>
                 {/* Logo End */}
