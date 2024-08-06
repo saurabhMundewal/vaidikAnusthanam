@@ -11378,3 +11378,6 @@ img.abs {
   width: 60px;
   height: 60px;
 }
+.logo-img{
+  max-width: 70%;
+}

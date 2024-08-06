@@ -29,13 +29,13 @@ const BlogCard = ({ blog }) => {
               <i className="far fa-calendar" /> {blog?.bloglist_postdate}
             </Link>
           </div>
-          <h5>
+          {/* <h5>
             <div
               dangerouslySetInnerHTML={{
-                __html: blog?.bloglist_description,
+                __html:  blog?.bloglist_description,
               }}
             />
-          </h5>
+          </h5> */}
           <div className="sigma_post-single-author">
             <img src="./../assets/img/people/1.jpg" alt="author" />
             <div className="sigma_post-single-author-content">

@@ -151,7 +151,7 @@ export default function Menu() {
           </ul>
         </li>
         <li className="menu-item">
-          <Link href="/Blog">Blog</Link>
+          <Link href="/blog">Blog</Link>
         </li>
         <li className="menu-item">
           <Link href="/contact-us">Contact</Link>
@@ -277,7 +277,7 @@ export default function Menu() {
                 {/* Logo Start */}
                 <div className="sigma_logo-wrapper">
                   <a className="navbar-brand" href="/">
-                    <img src={generalConfiguration?.profile_img} alt="logo" />
+                    <img src={generalConfiguration?.profile_img} alt="logo"  className="logo-img"/>
                   </a>
                 </div>
                 {/* Logo End */}
