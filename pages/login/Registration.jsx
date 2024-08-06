@@ -151,7 +151,7 @@ export default function Registration() {
                             onChange={handleChange}
                           >
                             <option selected="">Select User Type</option>
-                            <option value={1}>Devotees</option>
+                            <option value={1}>Priest</option>
                             <option value={2}>Devotees</option>
                           </select>
                         </div>

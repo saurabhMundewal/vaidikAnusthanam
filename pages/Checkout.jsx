@@ -137,6 +137,19 @@ const handleStateChange = (event) => {
   dispatch(fetchCities(event.target.value));
 };
 
+const getPujaType = () => {
+  switch (pujaData?.puja_slug) {
+    case 'online-puja':
+      return 1;
+    case 'puja-at-temples':
+      return 2;
+    case 'puja-at-home':
+      return 3;
+    default:
+      return null; // or some default value if needed
+  }
+};
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -153,7 +166,7 @@ const handleSubmit = async (e) => {
         submitBookingForm({
           packages_id: getItemWithExpiration("package_id"),
           puja_id: pujaData?.puja_id,
-          puja_type: pujaData?.puja_slug,
+          puja_type: getPujaType(),
           member_id: userid,
           price: isCoupenApply ? formData?.grand_total : findPujaPackageById?.puja_packages_with_gst_amount,
           puja_date: formData?.puja_date,

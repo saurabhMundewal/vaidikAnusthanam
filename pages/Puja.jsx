@@ -31,20 +31,22 @@ const PujaPage = () => {
   useEffect(() => {
     dispatch(fetchPuja());
   }, []);
+ 
+  const pujaMeta = pujaData?.puja_meta || {};
   
   return (
     <div>
       <>
         {/* partial */}
         <Head>
-          <title>{pujaData?.puja_meta?.puja_metatitle}</title>
+          <title>{pujaMeta?.meta_title}</title>
           <meta
             name="description"
-            content={"pujaData?.puja_meta?.puja_meta_description"}
+            content={pujaMeta?.meta_description}
           />
           <meta
             name="keywords"
-            content={pujaData?.puja_meta?.puja_meta_keywords}
+            content={pujaMeta?.meta_keywords}
           />
           {/* Add more meta tags as needed */}
         </Head>
@@ -56,8 +58,7 @@ const PujaPage = () => {
             <div className="sigma_subheader-inner">
               <div className="sigma_subheader-text">
                 <h1>
-                  Perform your puja as per Vedic rituals at Hindu pilgrimages
-                  and famous temples in India with Sri Mandir
+                  {pujaMeta?.data_banner_heading}
                 </h1>
               </div>
               <nav aria-label="breadcrumb">
@@ -68,7 +69,7 @@ const PujaPage = () => {
                     </Link>
                   </li>
                   <li className="breadcrumb-item active" aria-current="page">
-                    {"All Puja"}
+                    {'All Pujas'}
                   </li>
                 </ol>
               </nav>
@@ -79,14 +80,17 @@ const PujaPage = () => {
         <div className="section section-padding">
           <div className="container">
             <div>
-              <h2 className="title">Title Here</h2>
-              <p className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-                vitae odio sem. Vivamus tristique vitae eros congue tempus.
-                Quisque gravida convallis dapibus. Donec sed tincidunt nisi.
-                Phasellus id imperdiet risus. Ut nulla erat, tincidunt vitae
-                ipsum eu, euismod laoreet enim.
-              </p>
+              <h2 className="title">
+               {pujaMeta?.data_title}
+              </h2>
+              <div className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
+              <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                          pujaMeta?.data_content,
+                        }}
+                      />
+              </div>
             </div>
             <div className="row row g-3">
               {pujaData?.puja_data?.length
