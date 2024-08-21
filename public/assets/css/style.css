@@ -5042,9 +5042,9 @@ table img {
   padding-top: 50px;
 }
 .post-detail-wrapper{
-  padding: 40px;
-  border-radius: 10px;
-  border: 2px solid #efefef;
+  padding: 40px !important;
+  border-radius: 10px !important;
+  border: 2px solid #efefef !important;
 }
 
 .post-detail-wrapper .sigma_post-meta a + a{
@@ -5544,6 +5544,12 @@ table img {
   background-color: #7E4555;
   color: #fff;
 }
+
+.sidebar-widget.widget-categories ul li a .active {
+  background-color: #7E4555 !important;
+  color: #fff;
+}
+
 
 .sidebar-widget.widget-categories ul li a:hover span{
   background-color: #f0fff0;
@@ -11380,4 +11386,7 @@ img.abs {
 }
 .logo-img{
   max-width: 70%;
+}
+.blog-category{
+  font-size: 20px;
 }

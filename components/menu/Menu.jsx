@@ -151,7 +151,7 @@ export default function Menu() {
           </ul>
         </li>
         <li className="menu-item">
-          <Link href="/blog">Blog</Link>
+          <Link href="/blogs">Blog</Link>
         </li>
         <li className="menu-item">
           <Link href="/contact-us">Contact</Link>
