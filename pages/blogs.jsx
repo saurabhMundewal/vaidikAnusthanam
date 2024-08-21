@@ -202,7 +202,6 @@ export default function Blog() {
                   {/* Article End */}
                 </div>
                 {/* Pagination Start */}
-                {console.log(totalPages, 'totalPages', currentPage)}
                 {totalPages > 1 ?
                 <Pagination
                   currentPage={currentPage}

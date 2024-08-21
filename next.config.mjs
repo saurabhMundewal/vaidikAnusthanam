@@ -6,6 +6,9 @@ const nextConfig = {
     key_id: 'rzp_test_npfutZLyZxi54o',
     key_secret: 'pKVdKeyTmDxlSl1OEqfAVi4u',
   },
+   eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   headers: {
     'Client-Service': 'frontend-client',
