@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import BlogCard from "../../components/layouts/blogCard";
+import { fetchPosts, addPost } from "../features/blogSlice";
+import BlogCard from "../components/layouts/blogCard";
 import Pagination from "@/atoms/pagination";
-import axiosInstance from '../../lib/axiosInstance';
+import axiosInstance from '../lib/axiosInstance';
 
 export default function Blog() {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const { slug } = router.query;
   const posts = useSelector((state) => state.blog.posts);
   const status = useSelector((state) => state.blog.status);
   const error = useSelector((state) => state.blog.error);
@@ -17,7 +15,6 @@ export default function Blog() {
     (state) => state.generalConfiguration.data
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [blogData, setBlogData] = useState([]);
   const totalPages = Math.ceil(posts?.blogs?.length / 9);
   const [categoryList, setCategoryList] = useState([]);
 
@@ -27,19 +24,6 @@ export default function Blog() {
   const indexOfLastItem = currentPage * 9;
   const indexOfFirstItem = indexOfLastItem - 9;
   const currentItems = posts?.blogs?.slice(indexOfFirstItem, indexOfLastItem);
-
-  const fetchCategoryBlogs = async (slug) => {
-    try {
-      const response = await axiosInstance.post(`Blogs/blogList/${slug}`);
-      if (response?.status === 202) {
-        setBlogData([]);
-      }
-      setBlogData(JSON.parse(response?.data?.datas));
-    } catch (error) {
-      setBlogData([]);
-      console.error("Error fetching puja data:", error);
-    }
-  };
 
   const fetchBlogCategory = async () => {
     try {
@@ -53,19 +37,12 @@ export default function Blog() {
     }
   };
 
-  // useEffect(() => {
-  //   if (status === "idle") {
-  //     dispatch(fetchCategoryBlogs());
-  //     fetchBlogCategory()
-  //   }
-  // }, [status, dispatch]);
-
   useEffect(() => {
-    if (slug) {
-      fetchCategoryBlogs(slug);
+    if (status === "idle") {
+      dispatch(fetchPosts());
       fetchBlogCategory()
     }
-  }, [slug]);
+  }, [status, dispatch]);
 
 
   return (
@@ -198,12 +175,11 @@ export default function Blog() {
                   <div className="sidebar-widget widget-categories">
                     <h5 className="widget-title"> Our Categories </h5>
                     <ul className="sidebar-widget-list">
-                      {console.log(categoryList, 'categoryList')}
                     {categoryList?.length ?
                         categoryList?.map((catData) => {
                           return (
-                            <li key={catData?.data_id} >
-                              <Link href={`/blog/${catData?.slug}`} className="active">
+                            <li key={catData?.data_id}>
+                              <Link href={`/blog/${catData?.slug}`}>
                                 {catData?.title}
                                 {/* <span>32</span> */}
                               </Link>
@@ -219,7 +195,6 @@ export default function Blog() {
               <div className="col-lg-8">
                 <div className="row" id="body">
                   {/* Article Start */}
-                  {console.log(blogData, 'blogData')}
                   {posts &&
                     posts?.blogs?.map((post) => (
                       <BlogCard blog={post} key={post?.bloglist_data_id} />
@@ -227,11 +202,13 @@ export default function Blog() {
                   {/* Article End */}
                 </div>
                 {/* Pagination Start */}
+                {console.log(totalPages, 'totalPages', currentPage)}
+                {totalPages > 1 ?
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   onPageChange={handlePageChange}
-                />
+                />: null}
               </div>
             </div>
           </div>

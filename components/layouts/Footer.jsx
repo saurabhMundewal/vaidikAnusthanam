@@ -47,7 +47,7 @@ export default function Footer() {
                     <Link href="/Puja">Temples</Link>
                   </li> */}
                   <li>
-                    <i className="fas fa-om" /> <Link href="/blog">Blog</Link>
+                    <i className="fas fa-om" /> <Link href="/blogs">Blog</Link>
                   </li>
                   <li>
                     <i className="fas fa-om" />
@@ -60,7 +60,7 @@ export default function Footer() {
                 <ul>
                   <li>
                     <i className="fas fa-om" />
-                    <Link href="/Faq/">FAQs</Link>
+                    <Link href="/faq/">FAQs</Link>
                   </li>
                   <li>
                     <i className="fas fa-om" />

@@ -90,14 +90,15 @@ export default function LibraryDetailpage() {
         {/* Post Content Start */}
         <div className="section sigma_post-single">
           <div className="container">
-            <div className="img-container">
+          
+            <div className="row">
+              <div className="col-lg-8">
+                <div className="post-detail-wrapper">
+                <div className="img-container">
               <img
                 src={`${libraryData?.library_list?.library_image_url}/${libraryData?.library_list?.library_image}`}
               />
             </div>
-            <div className="row">
-              <div className="col-lg-8">
-                <div className="post-detail-wrapper">
                   <div className="entry-content">
                     {libraryData?.library_details_data?.length &&
                       libraryData?.library_details_data?.map((data) => {
