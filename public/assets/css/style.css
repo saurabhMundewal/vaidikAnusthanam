@@ -5045,6 +5045,7 @@ table img {
   padding: 40px !important;
   border-radius: 10px !important;
   border: 2px solid #efefef !important;
+  padding:15px !important; 
 }
 
 .post-detail-wrapper .sigma_post-meta a + a{
@@ -11389,4 +11390,29 @@ img.abs {
 }
 .blog-category{
   font-size: 20px;
+}
+/* pre-loader css */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full screen height */
+}
+
+.loader {
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid #ea7300; /* Orange */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
