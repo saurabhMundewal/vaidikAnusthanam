@@ -53,12 +53,6 @@ export default function Blog() {
     }
   };
 
-  // useEffect(() => {
-  //   if (status === "idle") {
-  //     dispatch(fetchCategoryBlogs());
-  //     fetchBlogCategory()
-  //   }
-  // }, [status, dispatch]);
 
   useEffect(() => {
     if (slug) {

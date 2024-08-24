@@ -38,11 +38,15 @@ export default function Blog() {
   };
 
   useEffect(() => {
+    fetchBlogCategory()
     if (status === "idle") {
-      dispatch(fetchPosts());
-      fetchBlogCategory()
+      dispatch(fetchPosts());      
     }
   }, [status, dispatch]);
+
+  useEffect(() => {
+    fetchBlogCategory() 
+  }, []);
 
 
   return (

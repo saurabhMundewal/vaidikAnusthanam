@@ -5,6 +5,7 @@ import { fetchAboutPageData } from "../features/aboutPageSlice";
 import HelpCenter from "@/atoms/helpCenter";
 import ContactForm from "../components/contactForm";
 import Head from "next/head";
+import Loader from "../components/preloader/Preloader";
 
 export default function About() {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ export default function About() {
       </Head>
 
       {aboutPageStatus === "loading" ? (
-        <p>Loading...</p>
+        <Loader />
       ) : error ? (
         <p>Error loading page</p>
       ) : aboutPageData ? (
@@ -220,9 +221,6 @@ export default function About() {
                     </div>
                   </div>
                 </div>
-                {/*<div class="col-lg-6">
-              <img src="https://vaidikanushthanam.in/assets/pages/b76bb64171328e74392949f60b5ab9f7.png" title="यतो धर्मः ततो जयः" alt="यतो धर्मः ततो जयः">
-            </div>*/}
               </div>
             </div>
           </section>

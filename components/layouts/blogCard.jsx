@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const BlogCard = ({ blog }) => {
   return (
-    <div className="col-md-4" key={blog?.bloglist_data_id}>
+    <div className="col-md-6" key={blog?.bloglist_data_id}>
        <article className="sigma_post">
         <div className="sigma_post-thumb">
           <Link href={`/blogDetails/${blog?.bloglist_slug}`}>

@@ -48,6 +48,8 @@ export default function BlogDetailpage() {
     }
   }, [slug]);
 
+ 
+
   useEffect(() => {
     // Only execute this code if `window` is available (client-side)
     if (typeof window !== "undefined") {
@@ -108,6 +110,7 @@ export default function BlogDetailpage() {
             <div className="row">
               <div className="col-lg-8">
                 <div className="post-detail-wrapper">
+                  <h2> {slug?.replace(/-/g, " ").toUpperCase()}</h2>
                   <div className="img-container">
                     <img
                       src={`${data?.blogs_detail_image_url}/${data?.blogs_detail_image}`}
