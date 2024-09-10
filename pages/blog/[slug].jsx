@@ -1,43 +1,31 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import axiosInstance from "../../lib/axiosInstance";
 import Link from "next/link";
-import BlogCard from "../../components/layouts/blogCard";
-import Pagination from "@/atoms/pagination";
-import axiosInstance from '../../lib/axiosInstance';
+import Head from "next/head";
+import { useSelector, useDispatch } from "react-redux";
 
-export default function Blog() {
-  const dispatch = useDispatch();
+export default function BlogDetailpage() {
   const router = useRouter();
   const { slug } = router.query;
-  const posts = useSelector((state) => state.blog.posts);
-  const status = useSelector((state) => state.blog.status);
-  const error = useSelector((state) => state.blog.error);
+  const [blogData, setBlogData] = useState([]);
+  const [url, setUrl] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
+  const [isOpen, setIsOpen] = useState(1);
   const generalConfiguration = useSelector(
     (state) => state.generalConfiguration.data
   );
-  const [currentPage, setCurrentPage] = useState(1);
-  const [blogData, setBlogData] = useState([]);
-  const totalPages = Math.ceil(posts?.blogs?.length / 9);
-  const [categoryList, setCategoryList] = useState([]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-  const indexOfLastItem = currentPage * 9;
-  const indexOfFirstItem = indexOfLastItem - 9;
-  const currentItems = posts?.blogs?.slice(indexOfFirstItem, indexOfLastItem);
-
-  const fetchCategoryBlogs = async (slug) => {
+  const fetchBlog = async (slug) => {
     try {
-      const response = await axiosInstance.post(`Blogs/blogList/${slug}`);
+      const response = await axiosInstance.post(`/Blogs/blogDetails/${slug}`);
       if (response?.status === 202) {
         setBlogData([]);
       }
       setBlogData(JSON.parse(response?.data?.datas));
     } catch (error) {
       setBlogData([]);
-      console.error("Error fetching puja data:", error);
+      console.error("Error fetching blog data:", error);
     }
   };
 
@@ -53,47 +41,155 @@ export default function Blog() {
     }
   };
 
-
   useEffect(() => {
     if (slug) {
-      fetchCategoryBlogs(slug);
-      fetchBlogCategory()
+      fetchBlog(slug);
+      fetchBlogCategory();
     }
   }, [slug]);
 
+ 
+
+  useEffect(() => {
+    // Only execute this code if `window` is available (client-side)
+    if (typeof window !== "undefined") {
+      setUrl(`${window.location.origin}${router.asPath}`);
+    }
+  }, [router.asPath]);
+
+  const data = blogData?.blogs_details_data?.length
+    ? blogData?.blogs_details_data[0]
+    : blogData?.blogs_details_data;
 
   return (
     <div>
       <>
-        {/* partial:partia/__subheader.html */}
-        <div
-          className="sigma_subheader dark-overlay dark-overlay-2"
-          style={{ backgroundImage: "url(./../assets/img/subheader.jpg)" }}
-        >
-          <div className="container">
-            <div className="sigma_subheader-inner">
-              <div className="sigma_subheader-text">
-                <h1>Blogs</h1>
-              </div>
-              <nav aria-label="breadcrumb">
-                <ol className="breadcrumb">
-                  <li className="breadcrumb-item">
-                    <Link className="btn-link" href="/">
-                      Home
-                    </Link>
-                  </li>
-                  <li className="breadcrumb-item active" aria-current="page">
-                    Blogs
-                  </li>
-                </ol>
-              </nav>
-            </div>
-          </div>
+        <Head>
+          <title>{blogData?.blogs_list?.blogs_metatitle}</title>
+          <meta
+            name="description"
+            content={blogData?.blogs_list?.blogs_meta_description}
+          />
+          <meta
+            name="keywords"
+            content={blogData?.blogs_list?.blogs_meta_keywords}
+          />
+          {/* Add more meta tags as needed */}
+        </Head>
+        <div className="breadcrumb-trail">
+          <ul className="trail">
+            <li className="trail-item">
+              <Link href="/" className="trail-link">
+                Home
+              </Link>
+            </li>
+            <li className="trail-item">
+              <Link href="#" className="trail-link">
+                Blogs
+              </Link>
+            </li>
+            <li className="trail-item">
+              {/* <Link
+                href={`/libraries/${blogData?.library_list?.library_catrgory_slug}`}
+                className="trail-link"
+              > */}
+              {slug?.replace(/-/g, " ").toUpperCase()}
+              {/* </Link> */}
+            </li>
+            {/* <li className="trail-item trail-current">
+              {" "}
+              {slug?.replace(/-/g, " ").toUpperCase()}
+            </li> */}
+          </ul>
         </div>
         {/* partial */}
-        <div className="section">
+        {/* Post Content Start */}
+        <div className="section sigma_post-single">
           <div className="container">
             <div className="row">
+              <div className="col-lg-8">
+                <div className="post-detail-wrapper">
+                  <h2> {slug?.replace(/-/g, " ").toUpperCase()}</h2>
+                  <div className="img-container">
+                    <img
+                      src={`${data?.blogs_detail_image_url}/${data?.blogs_detail_image}`}
+                    />
+                  </div>
+                  <div className="entry-content">
+                    <h4 className="entry-title">{data?.blogs_detail_title}</h4>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: data?.blogs_detail_description,
+                      }}
+                    />
+                  </div>
+
+                  <div class="sigma_post-single-meta">
+                    <div class="sigma_post-single-meta-item"></div>
+                    <div class="sigma_post-single-meta-item sigma_post-share">
+                      <h6>Share</h6>
+                      <ul class="sigma_sm">
+                        <li>
+                          <a
+                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                              `${url}`
+                            )}}`}
+                            target="_blank"
+                          >
+                            <i class="fab fa-facebook-f"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`https://www.linkedin.com/cws/share?url=${encodeURIComponent(
+                              `${url}`
+                            )}}`}
+                            target="_blank"
+                          >
+                            <i class="fab fa-linkedin-in"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`https://twitter.com/share?text=${data?.blogs_detail_title}&amp;url=${encodeURIComponent(
+                              `${url}`
+                            )}`}
+                            target="_blank"
+                          >
+                            <i class="fab fa-twitter"></i>
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href={`https://web.whatsapp.com/send?text=${encodeURIComponent(
+                              `${url}`
+                            )}`}
+                            target="_blank"
+                          >
+                            <i class="fab fa-whatsapp"></i>
+                          </a>
+                        </li>
+                        {/* <li>
+                          <a
+                            href="javascript:(Void);"
+                            target="_blank"
+                            onclick="var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','//assets.pinterest.com/js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);return false;"
+                          >
+                            <i class="fab fa-pinterest"></i>
+                          </a>
+                        </li> */}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="section"></div>
+                  {/* Post Pagination End */}
+                  {/* Related Posts Start */}
+
+                  {/* Related Posts End */}
+                </div>
+              </div>
+              {/* Sidebar Start */}
               <div className="col-lg-4">
                 <div className="sidebar">
                   {/* Search Widget Start */}
@@ -147,38 +243,64 @@ export default function Blog() {
                     <h5 className="widget-title">Never Miss Out</h5>
                     <ul className="sigma_sm square light">
                       <li>
-                      <Link
-                      href={generalConfiguration?.facebook ? generalConfiguration?.facebook : '#'}
-                      target="_blank;"
-                    >
-                      <i className="fab fa-facebook-f" />
-                    </Link>
+                        <Link
+                          href={
+                            generalConfiguration?.facebook
+                              ? generalConfiguration?.facebook
+                              : "#"
+                          }
+                          target="_blank;"
+                        >
+                          <i className="fab fa-facebook-f" />
+                        </Link>
                       </li>
                       <li>
-                      <Link
-                      href={generalConfiguration?.instagram ? generalConfiguration?.instagram : '#'}
-                      target="_blank;"
-                    >
-                      <i className="fab fa-instagram" />
-                    </Link>
+                        <Link
+                          href={
+                            generalConfiguration?.instagram
+                              ? generalConfiguration?.instagram
+                              : "#"
+                          }
+                          target="_blank;"
+                        >
+                          <i className="fab fa-instagram" />
+                        </Link>
                       </li>
                       <li>
-                      <Link href={generalConfiguration?.twitter ? generalConfiguration?.twitter : '#'} target="_blank;">
-                      <i className="fab fa-twitter" />
-                    </Link>
+                        <Link
+                          href={
+                            generalConfiguration?.twitter
+                              ? generalConfiguration?.twitter
+                              : "#"
+                          }
+                          target="_blank;"
+                        >
+                          <i className="fab fa-twitter" />
+                        </Link>
                       </li>
                       <li>
-                      <Link href={generalConfiguration?.youtube ? generalConfiguration?.youtube : '#'} target="_blank;">
-                      <i className="fab fa-youtube" />
-                    </Link>
+                        <Link
+                          href={
+                            generalConfiguration?.youtube
+                              ? generalConfiguration?.youtube
+                              : "#"
+                          }
+                          target="_blank;"
+                        >
+                          <i className="fab fa-youtube" />
+                        </Link>
                       </li>
                       <li>
-                      <Link
-                      href={generalConfiguration?.pinterest ? generalConfiguration?.pinterest : '#'}
-                      target="_blank;"
-                    >
-                      <i className="fab fa-pinterest" />
-                    </Link>
+                        <Link
+                          href={
+                            generalConfiguration?.pinterest
+                              ? generalConfiguration?.pinterest
+                              : "#"
+                          }
+                          target="_blank;"
+                        >
+                          <i className="fab fa-pinterest" />
+                        </Link>
                       </li>
                       {/* <li>
                         <Link href="https://pin.it/2CgrlUzTP">
@@ -192,46 +314,29 @@ export default function Blog() {
                   <div className="sidebar-widget widget-categories">
                     <h5 className="widget-title"> Our Categories </h5>
                     <ul className="sidebar-widget-list">
-                      {console.log(categoryList, 'categoryList')}
-                    {categoryList?.length ?
+                      {categoryList?.length ? (
                         categoryList?.map((catData) => {
                           return (
-                            <li key={catData?.data_id} >
-                              <Link href={`/blog/${catData?.slug}`} className="active">
+                            <li key={catData?.data_id}>
+                              <Link href={`/blogs/${catData?.slug}`}>
                                 {catData?.title}
                                 {/* <span>32</span> */}
                               </Link>
                             </li>
                           );
-                        }):  <li>{'Category not available'}</li>}
+                        })
+                      ) : (
+                        <li>{"Category not available"}</li>
+                      )}
                     </ul>
                   </div>
                   {/* Categories End */}
                 </div>
               </div>
-
-              <div className="col-lg-8">
-                <div className="row" id="body">
-                  {/* Article Start */}
-                  {console.log(blogData, 'blogData')}
-                  {posts &&
-                    posts?.blogs?.map((post) => (
-                      <BlogCard blog={post} key={post?.bloglist_data_id} />
-                    ))}
-                  {/* Article End */}
-                </div>
-                {/* Pagination Start */}
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  onPageChange={handlePageChange}
-                />
-              </div>
+              {/* Sidebar End */}
             </div>
           </div>
         </div>
-
-      
       </>
     </div>
   );

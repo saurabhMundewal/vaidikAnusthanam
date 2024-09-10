@@ -27,7 +27,7 @@ export default function Login() {
     setIsHydrated(true); // Hydration complete
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // Dispatch signup action and handle response
@@ -126,9 +126,18 @@ export default function Login() {
                           />
                         </div>
                         <div className="pass-link">
-                          <a href="#" onClick={() => setIsForgotPassword(true)}>
+                          <button
+                            type="button"
+                            onClick={() => setIsForgotPassword(true)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "blue",
+                              cursor: "pointer",
+                            }}
+                          >
                             Forgot password?
-                          </a>
+                          </button>
                         </div>
                         <div className="field btn-1">
                           <div className="btn-layer" />
@@ -136,7 +145,7 @@ export default function Login() {
                         </div>
                         <div className="signup-link">
                           Not a member?{" "}
-                          <Link href="/login/Registration">Signup now</Link>
+                          <Link href="/login/registration">Signup now</Link>
                         </div>
                       </form>
                     ) : (
@@ -157,12 +166,18 @@ export default function Login() {
                           <input type="submit" defaultValue="Submit" />
                         </div>
                         <div className="pass-link">
-                          <a
-                            href="#"
+                          <button
+                            type="button"
                             onClick={() => setIsForgotPassword(false)}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "blue",
+                              cursor: "pointer",
+                            }}
                           >
                             Back to login
-                          </a>
+                          </button>
                         </div>
                       </form>
                     )}

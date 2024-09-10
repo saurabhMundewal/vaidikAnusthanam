@@ -23,7 +23,7 @@ export default function EditProfile() {
               {/* <a href="index.html">My Bookings</a> */}
             </li>
             <li className="menu-item">
-              <Link href="/login/Profile">My Profile</Link>
+              <Link href="/login/profile">My Profile</Link>
               {/* {" "}
               <a href="about-us.html">My Profile</a>{" "} */}
             </li>
@@ -33,7 +33,7 @@ export default function EditProfile() {
               <a href="blog.html">Book New Puja</a>{" "} */}
             </li>
             <li className="menu-item">
-              <Link href="/login/Login">Logout</Link>
+              <Link href="/login/login">Logout</Link>
               {/* {" "}
               <a href="#">Logout</a>{" "} */}
             </li>

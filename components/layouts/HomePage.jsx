@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import MainSlider from "../../atoms/mainSlider";
 import PoojaCard from "@/atoms/pujaCard";
 import Link from "next/link";
 import HelpCenter from "@/atoms/helpCenter";
 import ContactForm from "../contactForm";
 import BlogCard from "./blogCard";
 import Head from "next/head";
+import dynamic from 'next/dynamic';
+
+const MainSlider = dynamic(() => import('../../atoms/mainSlider'));
 
 export default function HomePage(props) {
   const [isOpen, setIsOpen] = useState(1);
@@ -465,12 +467,12 @@ export default function HomePage(props) {
         <div className="container">
           <div className="section-title text-center">
             <p className="subtitle">Blog</p>
-            <h4 className="title">News Feed</h4>
+            <h4 className="text-white">News Feed</h4>
           </div>
           <div className="row">
             {/* Article Start */}
             {props?.blogData?.map((blog) => {
-              return <BlogCard blog={blog} />;
+              return <BlogCard blog={blog} key={blog?.bloglist_data_id} className="col-md-4"/>;
             })}
 
             {/* Article End */}

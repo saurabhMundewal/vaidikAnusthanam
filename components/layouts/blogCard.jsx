@@ -1,12 +1,12 @@
 import React from "react";
 import Link from "next/link";
 
-const BlogCard = ({ blog }) => {
+const BlogCard = ({ blog, className }) => {
   return (
-    <div className="col-md-6" key={blog?.bloglist_data_id}>
+    <div className={className} key={blog?.bloglist_data_id}>
        <article className="sigma_post">
         <div className="sigma_post-thumb">
-          <Link href={`/blogDetails/${blog?.bloglist_slug}`}>
+          <Link href={`/blog/${blog?.bloglist_slug}`}>
             <img src={blog?.bloglist_image} alt="post" />
           </Link>
         </div>
@@ -15,7 +15,7 @@ const BlogCard = ({ blog }) => {
             <div class="me-3">
               <i class="fas fa-om"></i>
               <Link
-                href={`/blogDetails/${blog?.bloglist_slug}`}
+                href={`/blog/${blog?.bloglist_slug}`}
                 class="sigma_post-category"
               >
                 {blog?.bloglist_category_title}
@@ -23,7 +23,7 @@ const BlogCard = ({ blog }) => {
             </div>
 
             <Link
-              href={`/blogDetails/${blog?.bloglist_slug}`}
+              href={`/blog/${blog?.bloglist_slug}`}
               class="sigma_post-date"
             >
               {" "}
@@ -32,7 +32,7 @@ const BlogCard = ({ blog }) => {
           </div>
           <h6>
             {" "}
-            <Link href={`/blogDetails/${blog?.bloglist_slug}`}>
+            <Link href={`/blog/${blog?.bloglist_slug}`}>
               {blog?.bloglist_title}
             </Link>{" "}
           </h6>

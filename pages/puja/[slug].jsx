@@ -51,14 +51,8 @@ const PujaPage = () => {
         {/* partial */}
         <Head>
           <title>{pujaMeta?.meta_title}</title>
-          <meta
-            name="description"
-            content={pujaMeta?.meta_description}
-          />
-          <meta
-            name="keywords"
-            content={pujaMeta?.meta_keywords}
-          />
+          <meta name="description" content={pujaMeta?.meta_description} />
+          <meta name="keywords" content={pujaMeta?.meta_keywords} />
           {/* Add more meta tags as needed */}
         </Head>
         <div
@@ -68,9 +62,7 @@ const PujaPage = () => {
           <div className="container">
             <div className="sigma_subheader-inner">
               <div className="sigma_subheader-text">
-                <h1>
-                  {pujaMeta?.data_banner_heading}
-                </h1>
+                <h1>{pujaMeta?.data_banner_heading}</h1>
               </div>
               <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -91,16 +83,16 @@ const PujaPage = () => {
         <div className="section section-padding">
           <div className="container">
             <div>
-              <h2 className="title">
-               {pujaMeta?.data_title}
-              </h2>
-              <div className="subtitle" style={{ fontSize: 15, fontWeight: 500 }}>
+              <h2 className="title">{pujaMeta?.data_title}</h2>
               <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                          pujaMeta?.data_content,
-                        }}
-                      />
+                className="subtitle"
+                style={{ fontSize: 15, fontWeight: 500 }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: pujaMeta?.data_content,
+                  }}
+                />
               </div>
             </div>
             <div className="row row g-3">
@@ -109,11 +101,13 @@ const PujaPage = () => {
                 : "No Record Found"}
             </div>
 
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-            />
+            {totalPages > 1 ? (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            ) : null}
           </div>
         </div>
         <HelpCenter />

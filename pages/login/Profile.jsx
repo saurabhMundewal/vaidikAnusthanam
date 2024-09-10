@@ -33,7 +33,7 @@ export default function Profile() {
                     <a href="#">Book New Puja</a>{" "} */}
                   </li>
                   <li className="menu-item">
-                    <Link href="/login/Login">Logout</Link>
+                    <Link href="/login/login">Logout</Link>
                     {/* {" "}
                     <a href="#">Logout</a>{" "} */}
                   </li>
@@ -97,7 +97,7 @@ export default function Profile() {
                 <div className="card overview-sec">
                   <div className="card-body">
                     <h5 className="subs-title">About Me</h5>
-                    <Link href="/login/EditProfile">
+                    <Link href="/login/editProfile">
                       <button className="btn btn-primary">Edit Profile</button>
                     </Link>
 

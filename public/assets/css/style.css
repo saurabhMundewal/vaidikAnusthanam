@@ -1622,7 +1622,8 @@ blockquote::before{
   margin-bottom: 15px;
   font-size: 16px;
   text-transform: uppercase;
-  color: #7E4555;
+  color: #e6d5da;
+  font-weight: bold;
   
 }
 .section-title.text-start .subtitle{
@@ -11415,4 +11416,11 @@ img.abs {
   100% {
     transform: rotate(360deg);
   }
+}
+.sidebar-widget.widget-categories ul li a.active {
+  background-color: #7E4555 !important;
+  color: #fff;
+}
+.text-white{
+  color: #f1e7e7;
 }

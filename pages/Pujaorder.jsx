@@ -22,7 +22,7 @@ export default function Pujaoreder() {
                     <a href="#">My Bookings</a>
                   </li>
                   <li className="menu-item">
-                    <Link href="/login/Profile">My Profile</Link>
+                    <Link href="/login/profile">My Profile</Link>
                     {/* {" "}
               <a href="#">My Profile</a>{" "} */}
                   </li>
@@ -32,7 +32,7 @@ export default function Pujaoreder() {
               <a href="#">Book New Puja</a>{" "} */}
                   </li>
                   <li className="menu-item">
-                    <Link href="/login/Login">Logout</Link>
+                    <Link href="/login/login">Logout</Link>
                     {/* {" "}
               <a href="#">Logout</a>{" "} */}
                   </li>
