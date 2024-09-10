@@ -15,7 +15,7 @@ export default function Menu() {
   const generalConfiguration = useSelector(
     (state) => state.generalConfiguration.data
   );
-  const [href, setHref] = useState("/login/Login");
+  const [href, setHref] = useState("/login/login");
   const [menuText, setMenuText] = useState("Login");
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
   const [isExpand, setIsExpand] = useState("");

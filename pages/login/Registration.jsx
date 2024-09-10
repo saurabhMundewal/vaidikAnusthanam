@@ -62,7 +62,7 @@ export default function Registration() {
           // Show error toast with the error message
           toast.success(response.payload.message || 'An error occurred.');
           setTimeout(() => {
-            router.push("/login/Login");
+            router.push("/login/login");
           }, 2000);
         }
 
@@ -269,7 +269,7 @@ export default function Registration() {
                         </div>
                         <div className="signup-link">
                           Already member?{" "}
-                          <Link href="/login/Login">Login now</Link>
+                          <Link href="/login/login">Login now</Link>
                         </div>
                       </form>
                       <ToastContainer />

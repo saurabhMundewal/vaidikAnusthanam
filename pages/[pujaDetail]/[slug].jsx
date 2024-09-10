@@ -55,7 +55,7 @@ export default function PujaDetailpage() {
         setItemWithExpiration("price", price, 50);       
         router.push("/Checkout");
       } else {
-        router.push("/login/Login");
+        router.push("/login/login");
       }
     },
     [userType, userid, dispatch, router]

@@ -1,43 +1,49 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import Link from "next/link";
-import { fetchPosts, addPost } from "../features/blogSlice";
-import Head from "next/head";
-import BlogCard from "../components/layouts/blogCard";
+import BlogCard from "../../components/layouts/blogCard";
 import Pagination from "@/atoms/pagination";
-import axiosInstance from '../lib/axiosInstance';
+import axiosInstance from '../../lib/axiosInstance';
+import Head from "next/head";
 
 export default function Blog() {
-  const [blogData, setBlogData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(blogData?.length / 9);
-  const [categoryList, setCategoryList] = useState([]);
-
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { slug } = router.query;
+  const posts = useSelector((state) => state.blog.posts);
+  const status = useSelector((state) => state.blog.status);
+  const error = useSelector((state) => state.blog.error);
   const generalConfiguration = useSelector(
     (state) => state.generalConfiguration.data
   );
-  const fetchPosts = async (slug) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [blogData, setBlogData] = useState([]);
+  const totalPages = Math.ceil(posts?.blogs?.length / 9);
+  const [categoryList, setCategoryList] = useState([]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+  const indexOfLastItem = currentPage * 9;
+  const indexOfFirstItem = indexOfLastItem - 9;
+  const currentItems = posts?.blogs?.slice(indexOfFirstItem, indexOfLastItem);
+
+  const fetchCategoryBlogs = async (slug) => {
     try {
-      const response = await axiosInstance.post(`/Blogs/blogList`);
-      if (response?.status === 202) {
-        setBlogData([]);
+      const response = await axiosInstance.post(`Blogs/blogList/${slug}`);
+      console.log(response?.data?.datas, 'response?.data?.datas')
+      if (response?.status === 200) {
+        setBlogData(JSON.parse(response?.data?.datas));
       }
       else {
-        setBlogData(JSON.parse(response?.data?.datas));
+        setBlogData([]);
       }
     } catch (error) {
       setBlogData([]);
       console.error("Error fetching puja data:", error);
     }
   };
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
-  const indexOfLastItem = currentPage * 9;
-  const indexOfFirstItem = indexOfLastItem - 9;
-  const currentItems = blogData?.blogs?.slice(indexOfFirstItem, indexOfLastItem);
 
   const fetchBlogCategory = async () => {
     try {
@@ -51,10 +57,14 @@ export default function Blog() {
     }
   };
 
+
   useEffect(() => {
-    fetchBlogCategory()
-    fetchPosts()
-  }, []);
+    if (slug) {
+      fetchCategoryBlogs(slug);
+      fetchBlogCategory()
+    }
+  }, [slug]);
+
 
   return (
     <div>
@@ -194,8 +204,8 @@ export default function Blog() {
                       {categoryList?.length ?
                         categoryList?.map((catData) => {
                           return (
-                            <li key={catData?.data_id}>
-                              <Link href={`/blogs/${catData?.slug}`}>
+                            <li key={catData?.data_id} >
+                              <Link href={`/blogs/${catData?.slug}`} className={`${catData?.slug ===slug && 'active'}` }>
                                 {catData?.title}
                                 {/* <span>32</span> */}
                               </Link>
@@ -211,10 +221,10 @@ export default function Blog() {
               <div className="col-lg-8">
                 <div className="row" id="body">
                   {/* Article Start */}
-                  {blogData?.blogs?.length &&
-                    blogData?.blogs?.map((post) => (
+                  {posts ?
+                    posts?.blogs?.map((post) => (
                       <BlogCard blog={post} key={post?.bloglist_data_id}  className="col-md-6"/>
-                    ))}
+                    )):<p>{`Blogs are not available for ${slug}`}</p>}
                   {/* Article End */}
                 </div>
                 {/* Pagination Start */}

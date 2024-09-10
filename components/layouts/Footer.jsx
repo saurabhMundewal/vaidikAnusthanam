@@ -64,16 +64,16 @@ export default function Footer() {
                   </li>
                   <li>
                     <i className="fas fa-om" />
-                    <Link href="#">Privacy Policy </Link>
+                    <Link href="/privacy-policy/">Privacy Policy </Link>
                   </li>
                   {/*<li><i class="fas fa-om"></i><Link href="/payment-policy/">Payment Policy </Link></li>*/}
                   <li>
                     <i className="fas fa-om" />
-                    <Link href="#">Refund Policy </Link>
+                    <Link href="/refund-policy/">Refund Policy </Link>
                   </li>
                   <li>
                     <i className="fas fa-om" />
-                    <Link href="#">Terms &amp; Conditions </Link>
+                    <Link href="/terms-conditions/">Terms &amp; Conditions </Link>
                   </li>
                 </ul>
               </div>

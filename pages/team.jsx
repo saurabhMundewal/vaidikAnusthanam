@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTeam } from "../features/teamSlice";
+import Loader from "@/components/preloader/Preloader";
 
-export default function team() {
+export default function Team() {
   const dispatch = useDispatch();
   const team = useSelector((state) => state.team.team);
   const status = useSelector((state) => state.team.status);
@@ -13,6 +14,7 @@ export default function team() {
       dispatch(fetchTeam());
     }
   }, [status, dispatch]);
+
   return (
     <div>
       <>
@@ -35,10 +37,7 @@ export default function team() {
                       Home
                     </a>
                   </li>
-                  <li
-                    className="breadcrumb-item active"
-                    aria-current="pageOur "
-                  >
+                  <li className="breadcrumb-item active" aria-current="page">
                     Team
                   </li>
                 </ol>
@@ -46,12 +45,13 @@ export default function team() {
             </div>
           </div>
         </div>
-        {/* partial */}
         {/* About Start */}
         <div className="section section-padding">
           <div className="container">
             <div className="row">
-              {team?.length ? (
+              {status === "loading" ? (
+                 <Loader />
+              ) : team?.length ? (
                 team?.map((teamData, ind) => {
                   return (
                     <div className="col-lg-3 col-md-6" key={ind}>
@@ -60,16 +60,10 @@ export default function team() {
                           <img src={teamData?.image} alt={teamData?.name} />
                           <ul className="sigma_sm">
                             <li>
-                              {" "}
-                              <a
-                                href="#"
-                                className="trigger-volunteers-socials"
-                              >
-                                {" "}
-                                <i className="fal fa-plus" />{" "}
-                              </a>{" "}
+                              <a href="#" className="trigger-volunteers-socials">
+                                <i className="fal fa-plus" />
+                              </a>
                             </li>
-                            {/**/}
                           </ul>
                         </div>
                         <div className="sigma_volunteers-body">
